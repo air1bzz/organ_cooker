@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'organ/cooker/version'
+require 'organ_cooker/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "organ-cooker"
-  spec.version       = Organ::Cooker::VERSION
+  spec.version       = OrganCooker::VERSION
   spec.date          = '2016-05-03'
   spec.authors       = ["Erwan MORVAN"]
   spec.email         = ["air1bzz@gmail.com"]
