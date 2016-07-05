@@ -7,7 +7,6 @@ module OrganCooker
   # work out pipes.
   class Rank
 
-    ##
     # An array with toe holes diameters.
     attr_accessor :toe_holes
 
@@ -15,7 +14,6 @@ module OrganCooker
 
     @@alpha_notes = %w(C C# D D# E F F# G G# A A# B)
 
-    ##
     # Initialization.
     def initialize(name, height, size, prog, nb_notes, start_note, sound_speed, diapason)
       @name        = name
@@ -41,7 +39,6 @@ module OrganCooker
       end
     end
 
-    ##
     # Returns an array of sizes (int. diameters).
     def sizes
       sizes = [@size.to_i]
@@ -62,7 +59,6 @@ module OrganCooker
       return sizes.map! { |size| size.round(0) }
     end
 
-    ##
     # Méthode permettant de créer un tableau des notes.
     def notes
       octave = info_note(@start_note)[:octave]
@@ -79,7 +75,6 @@ module OrganCooker
       return notes
     end
 
-    ##
     # Méthode permettant de créer un tableau des frequences.
     def frequences
       frequences = []
@@ -94,7 +89,6 @@ module OrganCooker
       return frequences
     end
 
-    ##
     # Méthode permettant de créer un tableau des longueurs.
     def longueurs(diviseur: 1)
       return frequences().map { |frequence| (@sound_speed / (frequence * 2) * 1000) / diviseur }
@@ -102,7 +96,6 @@ module OrganCooker
 
     private
 
-    ##
     # Permet de trouver le nb de demi-tons à partir du LA3 (négatif ou positif).
     def demi_tons_from_A3_to(note)
       note   = note.upcase
@@ -135,7 +128,6 @@ module OrganCooker
       end
     end
 
-    ##
     # Création d'un nombre de pieds décimal pour une entrée sous forme de fraction.
     def height_decimal(height)
       if height.include?('/')
@@ -146,7 +138,6 @@ module OrganCooker
       end
     end
 
-    ##
     # Retourne le nom et l'octave d'une note.
     def info_note(note)
       { nom: note[/[^-\d]+/].upcase, octave: note[/-?\d+/].to_i }
@@ -160,7 +151,6 @@ module OrganCooker
   # Cette classe permet de créer un jeu de type "Bourdon" (jeux bouchés).
   class RankTypeBourdon < Rank
 
-    ##
     # Cette méthode permet de diviser la longueur par 2 pour les jeux bouchés.
     def longueurs(diviseur: 2)
       super
@@ -171,7 +161,6 @@ module OrganCooker
   # avec plusieurs rangs et des reprises.
   class RankTypeMixtures < Rank
 
-    ##
     # Initialisation des instances.
     def initialize(name, height, size, prog, nb_notes, start_note, sound_speed, diapason, notes_reprises, nb_rows)
       super(name, height, size, prog, nb_notes, start_note, sound_speed, diapason)
@@ -179,7 +168,6 @@ module OrganCooker
       @nb_rows       = nb_rows
     end
 
-    ##
     # Méthode pour avoir le name complet du jeu.
     def nom
       name   = @name.split.each { |mot| mot.capitalize! }.join(' ')
@@ -206,7 +194,6 @@ module OrganCooker
       end
       return diams_ext
     end
-
 
     def sizes(typejeu: Rank)
       sizes     = {}
@@ -280,7 +267,6 @@ module OrganCooker
       return objets
     end
 
-    ##
     # Renvoi la note de départ et les notes de reprises,
     # ainsi que l'écart entre chaque note.
     def reprises
@@ -305,7 +291,6 @@ module OrganCooker
       return reprises
     end
 
-    ##
     # Permet de trouver la valeur d'un tableau la plus proche d'une valeur donnée.
     def plus_proche_de(num, tab)
       if num >= tab.max

@@ -1,4 +1,4 @@
-# This module is shared by diferent classes.
+# This module is shared by different classes.
 module Shared
 
   # Returns object name with optionally feet height or number of rows.
