@@ -5,5 +5,4 @@ require 'organ_cooker/rank'
 
 # Main module for this gem.
 module OrganCooker
-  # Your code goes here...
 end
