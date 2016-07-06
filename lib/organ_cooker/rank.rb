@@ -5,12 +5,12 @@ module OrganCooker
 
   # This class defines a pipe organ 'rank' with all the parameters needed to
   # work out pipes.
-  class Rank
+  class RankTypeFlute
 
     # An array with toe holes diameters.
     attr_accessor :toe_holes
 
-    include Shared
+    include OrganCooker::Shared
 
     @@alpha_notes = %w(C C# D D# E F F# G G# A A# B)
 
@@ -144,12 +144,8 @@ module OrganCooker
     end
   end
 
-  # Cette classe permet de créer un jeu de type "Flûte" (jeux ouverts).
-  class RankTypeFlute < Rank
-  end
-
   # Cette classe permet de créer un jeu de type "Bourdon" (jeux bouchés).
-  class RankTypeBourdon < Rank
+  class RankTypeBourdon < RankTypeFlute
 
     # Cette méthode permet de diviser la longueur par 2 pour les jeux bouchés.
     def longueurs(diviseur: 2)
@@ -159,7 +155,7 @@ module OrganCooker
 
   # Cette classe permet de créer un jeu de type "Fournitures"
   # avec plusieurs rangs et des reprises.
-  class RankTypeMixtures < Rank
+  class RankTypeMixtures < RankTypeFlute
 
     # Initialisation des instances.
     def initialize(name, height, size, prog, nb_notes, start_note, sound_speed, diapason, notes_reprises, nb_rows)
@@ -320,6 +316,7 @@ module OrganCooker
     end
   end
 end
+
 # m = RankTypeMixtures.new("plein jeu", {:rang1=>["2", "2 2/3", "4", "8"], :rang2=>["-", "2", "2 2/3", "4"], :rang3=>["-", "-", "2", "2 2/3"]}, "84", "7", "56", "c1", 342.426, "440", "c1:c2:c3:c4", "3")
 # n = RankTypeCornet.new("plein jeu", {:rang1=>["2", "2 2/3", "4", "8"], :rang2=>["1 1/3", "2", "2 2/3", "4"], :rang3=>["1", "1 1/3", "2", "2 2/3"]}, "84", "7", "56", "c1", 342.426, "440", "c1:c2:c3:c4", "3")
 # f = RankTypeFlute.new("montre", "8", "145", "6", "56", "c1", 342.426, "440")
