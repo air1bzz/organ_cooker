@@ -1,5 +1,8 @@
-# This module is shared by different classes.
-module Shared
+# This module is shared with :
+# * OrganCooker::Manual
+# * OrganCooker::Project
+# * OrganCooker::Rank
+module OrganCooker::Shared
 
   # Returns object name with optionally feet height or number of rows.
   def name

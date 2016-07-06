@@ -16,10 +16,10 @@ describe OrganCooker::Project do
     end
   end
 
-  describe "#sound_speed" do
+  describe "#speed_of_sound" do
     it "sould return the sound speed" do
-      @test_1.sound_speed.must_equal 342.426
-      @test_2.sound_speed.must_equal 340.605
+      @test_1.speed_of_sound.must_equal 342.426
+      @test_2.speed_of_sound.must_equal 340.605
     end
   end
 end
@@ -39,10 +39,10 @@ end
 describe OrganCooker::Rank do
   before do
     p = OrganCooker::Project.new("mantes-la-jolie", "18", "435")
-    @test_1 = OrganCooker::RankTypeFlute.new("montre", "8", "145", "6", "56", "c1", p.sound_speed, p.diapason)
-    @test_2 = OrganCooker::RankTypeBourdon.new("bourdon", "8", "86", "5", "64", "a0", p.sound_speed, p.diapason)
-    @test_3 = OrganCooker::RankTypeMixtures.new("plein jeu", {:rang1=>["2", "2 2/3", "4", "8"], :rang2=>["-", "2", "2 2/3", "4"], :rang3=>["-", "-", "2", "2 2/3"]}, "84", "7", "56", "c1", p.sound_speed, p.diapason, "c1:c2:c3:c4", "3")
-    @test_4 = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", "61", "c1", p.sound_speed, p.diapason)
+    @test_1 = OrganCooker::RankTypeFlute.new("montre", "8", "145", "6", "56", "c1", p.speed_of_sound, p.diapason)
+    @test_2 = OrganCooker::RankTypeBourdon.new("bourdon", "8", "86", "5", "64", "a0", p.speed_of_sound, p.diapason)
+    @test_3 = OrganCooker::RankTypeMixtures.new("plein jeu", {:rang1=>["2", "2 2/3", "4", "8"], :rang2=>["-", "2", "2 2/3", "4"], :rang3=>["-", "-", "2", "2 2/3"]}, "84", "7", "56", "c1", p.speed_of_sound, p.diapason, "c1:c2:c3:c4", "3")
+    @test_4 = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", "61", "c1", p.speed_of_sound, p.diapason)
   end
 
   describe "#name" do
