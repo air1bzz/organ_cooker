@@ -3,18 +3,17 @@ require 'roman'
 
 module OrganCooker
 
-  # This class defines a pipe organ 'rank' with all the parameters needed to
-  # work out pipes.
+  # Creates a pipe organ +rank+ object.
   class RankTypeFlute
 
-    # An array with toe holes diameters.
+    # An array of +toe_holes+ diameters.
     attr_accessor :toe_holes
 
     include OrganCooker::Shared
 
     @@alpha_notes = %w(C C# D D# E F F# G G# A A# B)
 
-    # Initialization.
+    # Initialize an OrganCooker::RankTypeFlute object.
     def initialize(name, height, size, prog, nb_notes, start_note, sound_speed, diapason)
       @name        = name
       @height      = height
@@ -317,11 +316,11 @@ module OrganCooker
   end
 end
 
-# m = RankTypeMixtures.new("plein jeu", {:rang1=>["2", "2 2/3", "4", "8"], :rang2=>["-", "2", "2 2/3", "4"], :rang3=>["-", "-", "2", "2 2/3"]}, "84", "7", "56", "c1", 342.426, "440", "c1:c2:c3:c4", "3")
-# n = RankTypeCornet.new("plein jeu", {:rang1=>["2", "2 2/3", "4", "8"], :rang2=>["1 1/3", "2", "2 2/3", "4"], :rang3=>["1", "1 1/3", "2", "2 2/3"]}, "84", "7", "56", "c1", 342.426, "440", "c1:c2:c3:c4", "3")
-# f = RankTypeFlute.new("montre", "8", "145", "6", "56", "c1", 342.426, "440")
-# b = RankTypeBourdon.new("bourdon", "16", "145", "6", "64", "a0", 342.426, "440")
-# binding.pry
-# 2:2 2/3:4:8
-# 1 1/3:2:2 2/3:4
-# 1:1 1/3:2:2 2/3
+# :nodoc: m = RankTypeMixtures.new("plein jeu", {:rang1=>["2", "2 2/3", "4", "8"], :rang2=>["-", "2", "2 2/3", "4"], :rang3=>["-", "-", "2", "2 2/3"]}, "84", "7", "56", "c1", 342.426, "440", "c1:c2:c3:c4", "3")
+# :nodoc: n = RankTypeCornet.new("plein jeu", {:rang1=>["2", "2 2/3", "4", "8"], :rang2=>["1 1/3", "2", "2 2/3", "4"], :rang3=>["1", "1 1/3", "2", "2 2/3"]}, "84", "7", "56", "c1", 342.426, "440", "c1:c2:c3:c4", "3")
+# :nodoc: f = RankTypeFlute.new("montre", "8", "145", "6", "56", "c1", 342.426, "440")
+# :nodoc: b = RankTypeBourdon.new("bourdon", "16", "145", "6", "64", "a0", 342.426, "440")
+# :nodoc: binding.pry
+# :nodoc: 2:2 2/3:4:8
+# :nodoc: 1 1/3:2:2 2/3:4
+# :nodoc: 1:1 1/3:2:2 2/3
