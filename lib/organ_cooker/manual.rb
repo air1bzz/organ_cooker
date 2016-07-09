@@ -12,9 +12,9 @@ class OrganCooker::Manual
   attr_reader :first_note
 
   # Initialize a OrganCooker::Manual object with these parameters :
-  # * a name
-  # * the number of notes (default: 61, from C0 to C6)
-  # * the first note (default: C0)
+  # * a name (ex : "grand-orgue")
+  # * the number of notes (default: "61", from C0 to C6)
+  # * the first note (default: "C0")
   # Example :
   #   OrganCooker::Manual.new("grand-orgue", nb_notes="56", first_note="A#4")
   # The notes must follow this pattern :
