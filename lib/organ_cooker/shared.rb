@@ -1,9 +1,11 @@
+##
 # This module is shared with :
-# * OrganCooker::Manual
+# * OrganCooker::WindChest
 # * OrganCooker::Project
 # * OrganCooker::RankTypeFlute
 module OrganCooker::Shared
 
+  ##
   # Returns object name with optionally feet height or number of rows.
   def name
     name = @name.gsub(/[[:alpha:]]+/) { |word| word.capitalize }
@@ -26,6 +28,7 @@ module OrganCooker::Shared
 
   private
 
+  ##
   # Returns an array of numbers.
   def digits_scan(string)
     string.scan(/[[:digit:]]+/)
