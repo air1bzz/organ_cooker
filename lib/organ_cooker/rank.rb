@@ -4,27 +4,29 @@ require 'roman'
 module OrganCooker
 
   ##
-  # Defines a flute-type rank. That means with opened pipes.
+  # Defines a +flute-type rank+. That means with opened pipes.
   class RankTypeFlute
 
     ##
     # An array of +toe_holes+ diameters.
     attr_accessor :toe_holes
 
-    include OrganCooker::Shared
-
     @@alpha_notes = %w(C C# D D# E F F# G G# A A# B)
 
     ##
-    # Initialize an OrganCooker::RankTypeFlute object with these parameters :
-    # [name]              a name (ex: "montre")
-    # [heigth]            the height (in feet) for the lowest pipe (ex: "4")
-    # [size]              the size (internal diameter) for the lowest pipe (ex: "145")
-    # [progression]       the progression
-    # [windchest_object]  an OrganCooker::WindChest object that the rank belongs to
-    # [project_object]    an OrganCooker::Project object that the rank belongs to
-    # [first_note]        the lowest note (if different than the one in OrganCooker::WindChest)
-    # ====Example :
+    # Initialize a +flute-type rank+ object
+    # @param name [String] a name (ex: "montre")
+    # @param height [String] the height (in feet) for the lowest pipe (ex: "4", "2 2/3")
+    # @param size [String, Numeric] the size (internal diameter) for the lowest pipe
+    #   (ex: "145")
+    # @param progression [String, Numeric] the progression
+    # @param windchest_object [OrganCooker::WindChest] the windchest object that
+    #   the rank belongs to
+    # @param project_object [OrganCooker::Project] the project object that the
+    #   rank belongs to
+    # @param first_note [String] the lowest note (if different than
+    #   the windchest's one)
+    # @example
     #   w = OrganCooker::WindChest.new("grand-orgue", "56", "c0")
     #   p = OrganCooker::Project.new("mantes-la-jolie", "15", "435")
     #   r = OrganCooker::RankTypeFlute.new("montre", "8", "145", "6", w, p, "c2")
@@ -36,6 +38,19 @@ module OrganCooker
       @windchest  = windchest_object
       @project    = project_object
       @first_note = first_note
+    end
+
+    ##
+    # Returns object name with height.
+    def name
+      name = @name.gsub(/[[:alpha:]]+/) { |word| word.capitalize }
+
+      if @height.include? "/"
+        numbers = digits_scan(@height)
+        "#{name} #{numbers[0]}' #{numbers[1]}/#{numbers[2]}"
+      else
+        "#{name} #{@height}'"
+      end
     end
 
     ##
@@ -99,6 +114,12 @@ module OrganCooker
     end
 
     private
+
+    ##
+    # Returns an array of numbers.
+    def digits_scan(string)
+      string.scan(/[[:digit:]]+/)
+    end
 
     ##
     # Returns the last note of the rank.

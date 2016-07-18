@@ -6,7 +6,7 @@ require 'pry'
 class String
 
   ##
-  # Converts string to music note class object
+  # Converts string to +music note+ object
   #
   # @return [OrganCooker::Note]
   # @api public
@@ -19,7 +19,7 @@ class String
 end
 
 ##
-# Repensents a music note. This class implement a
+# Repensents a +music note+. This class implement a
 # {http://ruby-doc.org/core-2.3.1/Range.html Range} class in order to
 # manipulate music notes easily.
 # @example
@@ -53,16 +53,16 @@ class OrganCooker::Note
   attr_reader :octave
 
   ##
-  # Initialize a Note class object by +letter+ and +octave+
-  # @param note [String]
+  # Initialize a music note object
+  # @param music_note [String]
   # @example
   #   OrganCooker::Note.new("a#4") #=> A#4
   # @note The note must follow this pattern :
-  #   * C, C#, D, D#, E, F, F#, G, G#, A, A#, B
-  #   * followed by octave number
-  def initialize(note)
-    @letter = note[/[^-?\d+]+/].upcase
-    @octave = note[/-?\d+/].to_i
+  #   * a +letter+ C, C#, D, D#, E, F, F#, G, G#, A, A#, B
+  #   * followed by +octave+ number
+  def initialize(music_note)
+    @letter = music_note[/[^-?\d+]+/].upcase
+    @octave = music_note[/-?\d+/].to_i
   end
 
   ##
