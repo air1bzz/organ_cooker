@@ -40,10 +40,11 @@ describe OrganCooker::RankTypeFlute do
   before do
     p = OrganCooker::Project.new("mantes-la-jolie", "18", "440")
     w = OrganCooker::WindChest.new("grand-orgue", "56", "C1")
+    r = OrganCooker::WindChest.new("grand-orgue", "61", "C1")
     @test_1 = OrganCooker::RankTypeFlute.new("montre", "8", "145", "6", w, p)
     #@test_2 = OrganCooker::RankTypeBourdon.new("bourdon", "8", "86", "5", "64", "a0", p.speed_of_sound, p.diapason)
     #@test_3 = OrganCooker::RankTypeMixtures.new("plein jeu", {:rang1=>["2", "2 2/3", "4", "8"], :rang2=>["-", "2", "2 2/3", "4"], :rang3=>["-", "-", "2", "2 2/3"]}, "84", "7", "56", "c1", p.speed_of_sound, p.diapason, "c1:c2:c3:c4", "3")
-    @test_4 = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", w, p)
+    @test_4 = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", r, p, "C2")
   end
 
   describe "#name" do
@@ -65,6 +66,13 @@ describe OrganCooker::RankTypeFlute do
     it "should return an array of inside diameters" do
       @test_1.sizes.must_equal [145, 140, 135, 130, 125, 120, 116, 112, 108, 104, 100, 96, 93, 89, 86, 83, 80, 77, 74, 71, 69, 66, 64, 61, 59, 57, 55, 53, 51, 49, 47, 46, 44, 42, 41, 39, 38, 36, 35, 34, 33, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 22, 21, 20, 19, 19]
       #@test_2.sizes.must_equal [86, 83, 80, 78, 75, 73, 70, 68, 66, 64, 62, 59, 58, 56, 54, 52, 50, 49, 47, 45, 44, 43, 41, 40, 38, 37, 36, 35, 34, 33, 31, 30, 29, 28, 28, 27, 26, 25, 24, 23, 22, 22, 21, 20, 20, 19, 18, 18, 17, 17, 16, 16, 15, 15, 14, 14, 13, 13, 12, 12, 12, 11, 11, 10]
+    end
+  end
+
+  describe "#notes" do
+    it "should return an array of string notes" do
+      @test_1.notes.must_equal ["C1", "C#1", "D1", "D#1", "E1", "F1", "F#1", "G1", "G#1", "A1", "A#1", "B1", "C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2", "C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3", "C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4", "C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5"]
+      @test_4.notes.must_equal ["C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2", "C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3", "C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4", "C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5", "C6"]
     end
   end
 end
