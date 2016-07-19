@@ -6,6 +6,27 @@ require_relative 'shared'
 # Ex : "Grand-Orgue", "Pedal", "Positif"...
 class OrganCooker::WindChest
 
+  ##
+  # @overload nb_notes
+  #   Gets the current number of notes
+  #   @api public
+  #   @return [String, Integer] the number of notes
+  # @overload nb_notes=(value)
+  #   Sets the new number of notes
+  #   @api public
+  #   @param value [String, Integer] the new number of notes
+  attr_accessor :nb_notes
+  ##
+  # @overload first_note
+  #   Gets the current lowest note
+  #   @api public
+  #   @return [String] the lowest note
+  # @overload first_note=(value)
+  #   Sets the new lowest note
+  #   @api public
+  #   @param value [String] the new lowest note
+  attr_accessor :first_note
+
   include OrganCooker::Shared
 
   # Initialize a windchest object
