@@ -66,6 +66,22 @@ class OrganCooker::Note
   end
 
   ##
+  # Finds the last note from first note and a number of notes
+  # @api public
+  # @return [OrganCooker::Note] the last note object
+  # @param nb_notes [Integer] the number of notes
+  # @example
+  #   n = OrganCooker::Note.new("c1")
+  #   n.find_last_note(61) #=> C6
+  def find_last_note(nb_notes)
+    note = self
+    (nb_notes - 1).times do
+      note = note.succ
+    end
+    note
+  end
+
+  ##
   # Returns the next note
   # @api public
   # @return [String] a string of next note
