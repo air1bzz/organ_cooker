@@ -8,10 +8,11 @@ module OrganCooker
   class RankTypeFlute
 
     ##
-    # An array of +toe_holes+ diameters.
+    # Gets the +toe holes+ of the rank
+    # @api public
+    # @return [Array<String, Integer>] the letter of the note
+    # @example
     attr_accessor :toe_holes
-
-    @@alpha_notes = %w(C C# D D# E F F# G G# A A# B)
 
     ##
     # Initialize a +flute-type rank+ object
@@ -30,7 +31,7 @@ module OrganCooker
     #   w = OrganCooker::WindChest.new("grand-orgue", "56", "c0")
     #   p = OrganCooker::Project.new("mantes-la-jolie", "15", "435")
     #   r = OrganCooker::RankTypeFlute.new("montre", "8", "145", "6", w, p, "c2")
-    def initialize(name, height, size, progression, windchest_object, project_object, first_note=windchest_object.instance_variable_get(:@first_note))
+    def initialize(name, height, size, progression, windchest_object, project_object, first_note=windchest_object.first_note)
       @name       = name
       @height     = height
       @size       = size
@@ -41,7 +42,10 @@ module OrganCooker
     end
 
     ##
-    # Returns object name with height.
+    # Returns object +name+ with +height+
+    # @api public
+    # @return [String] the name of the rank
+    # @example
     def name
       name = @name.gsub(/[[:alpha:]]+/) { |word| word.capitalize }
 
@@ -59,7 +63,7 @@ module OrganCooker
       frequencies = []
       height      = height_decimal(@height)
       semi_tons   = semi_tons_from_A3_to(@first_note)
-      diapason    = @project.instance_variable_get(:@diapason)
+      diapason    = @project.diapason
 
       notes.count.times do
         frequencies << (diapason.to_f * 2**(semi_tons.to_f / 12)) / (height / 8.0)
@@ -96,100 +100,36 @@ module OrganCooker
     end
 
     ##
-    # Returns an array of rank's notes.
+    # Returns an array of rank's notes
+    # @api public
+    # @return [Array<String>] the music notes
+    # @example will return notes from A1 (rank) to C2 (windchest's 13th note)
+    #   w = OrganCooker::WindChest.new("grand-orgue", "13", "C1")
+    #   p = OrganCooker::Project.new("mantes-la-jolie", "18", "440")
+    #   f = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", w, p, "A1")
+    #   f.notes #=> ["A1", "A#1", "B1", "C2"]
     def notes
-      octave = info_note(@first_note)[:octave]
-      index  = @@alpha_notes.index(info_note(@first_note)[:letter])
-      a_notes  = []
-
-      until a_notes.include?(last_note) do
-        if index == 12
-          octave += 1
-          index  = 0
-        end
-        a_notes << "#{@@alpha_notes[index]}#{octave}"
-        index += 1
-      end
-      a_notes
+      notes_range.to_a.map { |x| x.to_s }
     end
 
     private
 
     ##
+    # Returns a +Range+ object from first rank note to last windchest note
+    # @api private
+    # @return [Range] the music notes range
+    # @example
+    #   r = OrganCooker::Note.new("c3")..OrganCooker::Note.new("G#6") #=> C3..G#6
+    #   r.class #=> Range
+    #   r.to_a.size #=> 45
+    def notes_range
+      (@first_note.to_note..@windchest.last_note)
+    end
+
+    ##
     # Returns an array of numbers.
     def digits_scan(string)
       string.scan(/[[:digit:]]+/)
-    end
-
-    ##
-    # Returns the last note of the rank.
-    def last_note
-      note   = @windchest.instance_variable_get(:@first_note).upcase
-      octave = info_note(note)[:octave]
-      index  = @@alpha_notes.index(info_note(note)[:letter])
-
-      (@windchest.instance_variable_get(:@nb_notes).to_i - 1).times do
-        if index == 12
-          octave += 1
-          index = 0
-        end
-        index += 1
-      end
-      if index == 12
-        octave += 1
-        index = 0
-      end
-      "#{@@alpha_notes[index]}#{octave}"
-    end
-
-    ##
-    # Finds the number of semi-tons from A3 to a given note.
-    def semi_tons_from_A3_to(note)
-      note    = note.upcase
-      octave  = info_note(note)[:octave]
-      index   = @@alpha_notes.index(info_note(note)[:letter])
-      a_notes = []
-
-      if note == 'A#3' || note == 'B3' || octave > 3
-        octave = 3
-        index  = @@alpha_notes.index('A')
-        until a_notes.include?(note) do
-          if index == 12
-            octave += 1
-            index  = 0
-          end
-          a_notes << "#{@@alpha_notes[index]}#{octave}"
-          index += 1
-        end
-        return a_notes.index(note)
-      else
-        until a_notes.include?('A3') do
-          if index == 12
-            octave += 1
-            index  = 0
-          end
-          a_notes << "#{@@alpha_notes[index]}#{octave}"
-          index += 1
-        end
-        -a_notes.index('A3')
-      end
-    end
-
-    ##
-    # Returns a float height for a fraction entry (ex: 2'2/3).
-    def height_decimal(height)
-      if height.include?('/')
-        chiffres = height.scan(/\d+/).map { |i| i.to_f }
-        chiffres[0] + chiffres[1] / chiffres[2]
-      else
-        height.to_f
-      end
-    end
-
-    ##
-    # Splits letter and octave of a given note in a hash.
-    def info_note(note)
-      { letter: note[/[^-\d]+/].upcase, octave: note[/-?\d+/].to_i }
     end
   end
 

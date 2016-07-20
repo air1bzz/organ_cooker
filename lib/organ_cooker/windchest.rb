@@ -44,4 +44,15 @@ class OrganCooker::WindChest
     @nb_notes   = nb_notes
     @first_note = first_note
   end
+
+  ##
+  # Finds the last note of the windchest
+  # @api public
+  # @return [OrganCooker::Note] the last note
+  # @example
+  #   n = OrganCooker::WindChest.new("grand-orgue", "56", "C1")
+  #   n.last_note #=> G5
+  def last_note
+    @first_note.to_note.find_last_note(@nb_notes)
+  end
 end

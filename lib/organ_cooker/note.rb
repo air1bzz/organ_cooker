@@ -75,10 +75,26 @@ class OrganCooker::Note
   #   n.find_last_note(61) #=> C6
   def find_last_note(nb_notes)
     note = self
-    (nb_notes - 1).times do
+    (nb_notes.to_i - 1).times do
       note = note.succ
     end
     note
+  end
+
+  ##
+  # Finds the frequency of a note by +diapason+ and +feet height+
+  # @api public
+  # @return [Float] the frequency of the note
+  # @param diapason [Numeric] the frequency reference
+  # @param height [String] the height of the note (in feet)
+  # @example
+  #   n = OrganCooker::Note.new("a3")
+  #   n.frequency #=> 440.0
+  #   n = OrganCooker::Note.new("c3")
+  #   n.frequency(435, "2'2/3") #=> => 775.9576425392755
+  def frequency(diapason=440, height="8")
+    index = NOTES.index(@letter)
+    (diapason.to_f / height_decimal(height)) * 2**(@octave + ((index - 9.0) / 12))
   end
 
   ##
@@ -173,5 +189,23 @@ class OrganCooker::Note
   #   #=> G#1
   def inspect
     "#{@letter}#{@octave}"
+  end
+
+  private
+
+  ##
+  # Returns a float height for a fraction entry (ex: 2'2/3)
+  # @api private
+  # @return [Float]
+  # @param height [String]
+  # @example
+  #   height_decimal("2'2/3") #=> 2.6666666666666665
+  def height_decimal(height)
+    if height.include?('/')
+      chiffres = height.scan(/\d+/).map { |i| i.to_f }
+      chiffres[0] + chiffres[1] / chiffres[2]
+    else
+      height.to_f
+    end
   end
 end

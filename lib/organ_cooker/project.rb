@@ -8,6 +8,27 @@ class OrganCooker::Project
   include OrganCooker::Shared
 
   ##
+  # @overload temperature
+  #   Gets the current temperature
+  #   @api public
+  #   @return [String, Numeric] the temperature
+  # @overload temperature=(value)
+  #   Sets the new temperature
+  #   @api public
+  #   @param value [String, Numeric] the new temperature
+  attr_accessor :temperature
+  ##
+  # @overload diapason
+  #   Gets the current diapason
+  #   @api public
+  #   @return [String] the diapason
+  # @overload diapason=(value)
+  #   Sets the new diapason
+  #   @api public
+  #   @param value [String] the new diapason
+  attr_accessor :diapason
+
+  ##
   # Initialize a +project+ object
   # @param name [String] the name of the project (quite often a town name)
   # @param temperature [String, Numeric] the temperature (in Celsius)
