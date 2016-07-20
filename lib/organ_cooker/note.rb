@@ -16,6 +16,28 @@ class String
   def to_note
     OrganCooker::Note.new(self)
   end
+
+  ##
+  # Returns the next note
+  # @api public
+  # @return [String] a string of next note
+  # @example
+  #   n = OrganCooker::Note.new("g#1") #=> G#1
+  #   n.next_note                      #=> "A1"
+  def next_note
+    OrganCooker::Note.new(self).succ.to_s
+  end
+
+  ##
+  # Returns the previous note
+  # @api public
+  # @return [String] a string of previous note
+  # @example
+  #   n = OrganCooker::Note.new("g#1") #=> G#1
+  #   n.prev_note                      #=> "G1"
+  def prev_note
+    OrganCooker::Note.new(self).prev.to_s
+  end
 end
 
 ##
@@ -117,21 +139,23 @@ class OrganCooker::Note
   ##
   # Returns the previous note
   # @api public
-  # @return [String] a string of previous note
+  # @return [OrganCooker::Note] the previous object
   # @example
   #   n = OrganCooker::Note.new("g#1") #=> G#1
-  #   n.prev_note                      #=> "G1"
-  def prev_note
+  #   n.prev                           #=> G1
+  # @note Used by Ruby core
+  #   {http://ruby-doc.org/core-2.3.1/Comparable.html Comparable} module to
+  #   implement Range object.
+  def prev
     index  = NOTES.index(@letter) - 1
     octave = @octave
     if index == -1
       index   = 11
       octave -= 1
     end
-    "#{NOTES[index]}#{octave}"
+    OrganCooker::Note.new("#{NOTES[index]}#{octave}")
   end
 
-  ##
   ##
   # Returns next music note object
   # @api public
@@ -143,7 +167,13 @@ class OrganCooker::Note
   #   {http://ruby-doc.org/core-2.3.1/Comparable.html Comparable} module to
   #   implement Range object.
   def succ
-    OrganCooker::Note.new(self.next_note)
+    index  = NOTES.index(@letter) + 1
+    octave = @octave
+    if index == 12
+      index   = 0
+      octave += 1
+    end
+    OrganCooker::Note.new("#{NOTES[index]}#{octave}")
   end
 
   ##
