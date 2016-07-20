@@ -60,22 +60,13 @@ module OrganCooker
     ##
     # Returns an array of frequencies for each notes based on OrganCooker::Project diapason.
     def frequencies
-      frequencies = []
-      height      = height_decimal(@height)
-      semi_tons   = semi_tons_from_A3_to(@first_note)
-      diapason    = @project.diapason
-
-      notes.count.times do
-        frequencies << (diapason.to_f * 2**(semi_tons.to_f / 12)) / (height / 8.0)
-        semi_tons += 1
-      end
-      frequencies
+      notes_range.to_a.map { |note| note.frequency(@project.diapason, @height).round(2) }
     end
 
     ##
     # Returns an array of lengths for each pipes.
     def lengths
-      frequencies.map { |frequency| (@project.speed_of_sound / (frequency * 2) * 1000) }
+      frequencies.map { |frequency| (@project.speed_of_sound / (frequency * 2) * 1000).round(0) }
     end
 
     ##
@@ -109,7 +100,7 @@ module OrganCooker
     #   f = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", w, p, "A1")
     #   f.notes #=> ["A1", "A#1", "B1", "C2"]
     def notes
-      notes_range.to_a.map { |x| x.to_s }
+      notes_range.to_a.map { |note| note.to_s }
     end
 
     private
