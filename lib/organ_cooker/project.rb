@@ -11,21 +11,21 @@ class OrganCooker::Project
   # @overload temperature
   #   Gets the current temperature
   #   @api public
-  #   @return [String, Numeric] the temperature
   # @overload temperature=(value)
   #   Sets the new temperature
   #   @api public
   #   @param value [String, Numeric] the new temperature
+  # @return [String, Numeric] the temperature
   attr_accessor :temperature
   ##
   # @overload diapason
   #   Gets the current diapason
   #   @api public
-  #   @return [String] the diapason
   # @overload diapason=(value)
   #   Sets the new diapason
   #   @api public
   #   @param value [String] the new diapason
+  # @return [String] the diapason
   attr_accessor :diapason
 
   ##

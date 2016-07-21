@@ -50,7 +50,7 @@ describe OrganCooker::RankTypeFlute do
     @test_1 = OrganCooker::RankTypeFlute.new("montre", "8", "145", "6", w, p)
     #@test_2 = OrganCooker::RankTypeBourdon.new("bourdon", "8", "86", "5", "64", "a0", p.speed_of_sound, p.diapason)
     #@test_3 = OrganCooker::RankTypeMixtures.new("plein jeu", {:rang1=>["2", "2 2/3", "4", "8"], :rang2=>["-", "2", "2 2/3", "4"], :rang3=>["-", "-", "2", "2 2/3"]}, "84", "7", "56", "c1", p.speed_of_sound, p.diapason, "c1:c2:c3:c4", "3")
-    @test_4 = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", r, p, "C2")
+    @test_4 = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", r, p, first_note: "C2")
   end
 
   describe "#name" do

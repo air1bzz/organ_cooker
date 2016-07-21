@@ -9,9 +9,15 @@ module OrganCooker
 
     ##
     # Gets the +toe holes+ of the rank
-    # @api public
-    # @return [Array<String, Integer>] the letter of the note
-    # @example
+    ##
+    # @overload toe_holes
+    #   Gets the current toe holes
+    #   @api public
+    # @overload toe_holes=(value)
+    #   Sets the new toe holes
+    #   @api public
+    #   @param value [Array<Integer>, Nil] the new toe holes
+    # @return [Array<Integer>, Nil] the toe holes
     attr_accessor :toe_holes
 
     ##
@@ -25,20 +31,22 @@ module OrganCooker
     #   the rank belongs to
     # @param project_object [OrganCooker::Project] the project object that the
     #   rank belongs to
-    # @param first_note [String] the lowest note (if different than
+    # @param first_note [String] (optional) the lowest note (if different than
     #   the windchest's one)
+    # @param prog_change [OrganCooker::Note] (optional) the note where progression is changing
     # @example
     #   w = OrganCooker::WindChest.new("grand-orgue", "56", "c0")
     #   p = OrganCooker::Project.new("mantes-la-jolie", "15", "435")
     #   r = OrganCooker::RankTypeFlute.new("montre", "8", "145", "6", w, p, "c2")
-    def initialize(name, height, size, progression, windchest_object, project_object, first_note=windchest_object.first_note)
-      @name       = name
-      @height     = height
-      @size       = size
-      @prog       = progression
-      @windchest  = windchest_object
-      @project    = project_object
-      @first_note = first_note
+    def initialize(name, height, size, progression, windchest_object, project_object, first_note: windchest_object.first_note, prog_change: nil)
+      @name        = name
+      @height      = height
+      @size        = size
+      @prog        = progression
+      @windchest   = windchest_object
+      @project     = project_object
+      @first_note  = first_note
+      @prog_change = prog_change
     end
 
     ##
@@ -86,18 +94,20 @@ module OrganCooker
       h_sizes   = [@size.to_i]
       prog      = @prog
       add_sizes = Proc.new { h_sizes << h_sizes.last / prog.to_f**(1.0 / 48) }
-      nb_notes  = notes.count
+      nb_notes  = notes_range.to_a.size
 
-      if @prog.include?(':')
-        progs = @prog.split(':')
-        index = notes.index(@note_chang_prog.upcase)
-        prog  = progs[0]
-        index.times(&add_sizes)
-        prog  = progs[1]
-        (nb_notes - index - 1).times(&add_sizes)
-      else
+      if @prog_change.nil?
         (nb_notes - 1).times(&add_sizes)
+      else
+        progs    = digits_scan(@prog)
+        prog     = progs[0]
+        nb_notes = (notes_range.min.succ..@prog_change.to_note).to_a.size
+        nb_notes.times(&add_sizes)
+        prog     = progs[1]
+        nb_notes = (@prog_change.to_note.succ..notes_range.max).to_a.size
+        nb_notes.times(&add_sizes)
       end
+
       h_sizes.map! { |size| size.round(0) }
     end
 
