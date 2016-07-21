@@ -46,6 +46,10 @@ module OrganCooker
     # @api public
     # @return [String] the name of the rank
     # @example
+    #   p = OrganCooker::Project.new("mantes-la-jolie", "18", "440")
+    #   w = OrganCooker::WindChest.new("grand-orgue", "56", "C1")
+    #   r = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", r, p, "C2")
+    #   r.name #=> "Grosse Tierce 1' 3/5"
     def name
       name = @name.gsub(/[[:alpha:]]+/) { |word| word.capitalize }
 
@@ -58,7 +62,14 @@ module OrganCooker
     end
 
     ##
-    # Returns an array of frequencies for each notes based on OrganCooker::Project diapason.
+    # Returns an array of notes frequencies
+    # @api public
+    # @return [Array<Float>] the frequency of each note
+    # @example
+    #   p = OrganCooker::Project.new("mantes-la-jolie", "18", "440")
+    #   w = OrganCooker::WindChest.new("grand-orgue", "56", "C1")
+    #   r = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", w, p, "C2")
+    #   r.frequencies #=> [654.06, 692.96, 734.16, 777.82, 824.07, 873.07, 924.99...]
     def frequencies
       notes_range.to_a.map { |note| note.frequency(@project.diapason, @height).round(2) }
     end
