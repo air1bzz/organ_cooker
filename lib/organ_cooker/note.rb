@@ -1,5 +1,3 @@
-require 'pry'
-
 ##
 # Implementation of Ruby core {http://ruby-doc.org/core-2.3.1/String.html String}
 # class in order to access OrganCooker::Note objects.
@@ -83,8 +81,18 @@ class OrganCooker::Note
   #   * a +letter+ C, C#, D, D#, E, F, F#, G, G#, A, A#, B
   #   * followed by +octave+ number
   def initialize(music_note)
-    @letter = music_note[/[^-?\d+]+/].upcase
-    @octave = music_note[/-?\d+/].to_i
+    if /\A(a|a#|b|c|c#|d|d#|e|f|f#|g|g#)-?\d+\z/i === music_note
+      @letter = music_note[/[^-?\d+]+/].upcase
+      @octave = music_note[/-?\d+/].to_i
+    else
+      begin
+        raise "'#{music_note}' is not a music note."
+      rescue Exception => e
+        puts "#{e.message}"
+        puts "Valid notes are :"
+        puts "#{NOTES.join(' ')} (case insensitive), followed by octave number."
+      end
+    end
   end
 
   ##
@@ -114,7 +122,7 @@ class OrganCooker::Note
   #   n.frequency #=> 440.0
   #   n = OrganCooker::Note.new("c3")
   #   n.frequency(435, "2'2/3") #=> => 775.9576425392755
-  def frequency(diapason=440, height="8")
+  def frequency(diapason: 440, height: "8")
     index = NOTES.index(@letter)
     (diapason.to_f / height_decimal(height)) * 2**(@octave + ((index - 9.0) / 12))
   end
