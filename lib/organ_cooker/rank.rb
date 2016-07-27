@@ -1,4 +1,3 @@
-require_relative 'shared'
 require 'roman'
 
 module OrganCooker
@@ -37,7 +36,7 @@ module OrganCooker
     # @example
     #   w = OrganCooker::WindChest.new("grand-orgue", "56", "c0")
     #   p = OrganCooker::Project.new("mantes-la-jolie", "15", "435")
-    #   r = OrganCooker::RankTypeFlute.new("montre", "8", "145", "6", w, p, "c2")
+    #   r = OrganCooker::RankTypeFlute.new("montre", "8", "145", "6", w, p, first_note: "c2")
     def initialize(name, height, size, progression, windchest_object, project_object, first_note: windchest_object.first_note, prog_change: nil)
       @name        = name
       @height      = height
@@ -56,7 +55,7 @@ module OrganCooker
     # @example
     #   p = OrganCooker::Project.new("mantes-la-jolie", "18", "440")
     #   w = OrganCooker::WindChest.new("grand-orgue", "56", "C1")
-    #   r = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", r, p, "C2")
+    #   r = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", r, p, first_note: "C2")
     #   r.name #=> "Grosse Tierce 1' 3/5"
     def name
       name = @name.gsub(/[[:alpha:]]+/) { |word| word.capitalize }
@@ -70,33 +69,40 @@ module OrganCooker
     end
 
     ##
-    # Returns an array of notes frequencies
+    # Returns an array of notes +frequencies+
     # @api public
     # @return [Array<Float>] the frequency of each note
     # @example
     #   p = OrganCooker::Project.new("mantes-la-jolie", "18", "440")
     #   w = OrganCooker::WindChest.new("grand-orgue", "56", "C1")
-    #   r = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", w, p, "C2")
+    #   r = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", w, p, first_note: "C2")
     #   r.frequencies #=> [654.06, 692.96, 734.16, 777.82, 824.07, 873.07, 924.99...]
     def frequencies
       notes_range.to_a.map { |note| note.frequency(diapason: @project.diapason, height: @height).round(2) }
     end
 
     ##
-    # Returns an array of lengths for each pipes
+    # Returns an array of +lengths+ for each pipes
     # @api public
     # @return [Array<Integer>] the length of each note
     # @example
     #   p = OrganCooker::Project.new("mantes-la-jolie", "18", "440")
     #   w = OrganCooker::WindChest.new("grand-orgue", "56", "C1")
-    #   r = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", w, p, "C2")
+    #   r = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", w, p, first_note: "C2")
     #   r.lengths #=> [654.06, 692.96, 734.16, 777.82, 824.07, 873.07, 924.99...]
     def lengths
       frequencies.map { |frequency| (@project.speed_of_sound / (frequency * 2) * 1000).round(0) }
     end
 
     ##
-    # Returns an array of sizes (internal diameters).
+    # Returns an array of +sizes+ (internal diameters).
+    # @api public
+    # @return [Array<Integer>] the length of each note
+    # @example
+    #   p = OrganCooker::Project.new("mantes-la-jolie", "18", "440")
+    #   w = OrganCooker::WindChest.new("grand-orgue", "56", "C1")
+    #   r = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", w, p, first_note: "C2")
+    #   r.sizes #=> [50, 48, 47, 45, 44, 42, 41, 40, 38, 37, 36, 35...]
     def sizes
       h_sizes   = [@size.to_i]
       prog      = @prog
@@ -119,7 +125,7 @@ module OrganCooker
     end
 
     ##
-    # Returns an array of rank's notes
+    # Returns an array of rank's +notes+
     # @api public
     # @return [Array<String>] the music notes
     # @example will return notes from A1 (rank) to C2 (windchest's 13th note)
@@ -146,18 +152,26 @@ module OrganCooker
     end
 
     ##
-    # Returns an array of numbers.
+    # Returns an array of numbers
+    # @api private
+    # @return [Array] an array of numbers
+    # @example
+    #   string = "4 5 78 54 12"
+    #   digits_scan(string) #=> ["4", "5", "78", "54", "12"]
     def digits_scan(string)
       string.scan(/[[:digit:]]+/)
     end
   end
 
   ##
-  # Cette classe permet de créer un jeu de type "Bourdon" (jeux bouchés).
-  class RankTypeBourdon
+  # Defines a +bourdon-type rank+. That means with closed pipes.
+  class RankTypeBourdon < RankTypeFlute
 
-    def longueurs(diviseur: 2)
-      super
+    ##
+    # @see RankTypeFlute#lengths
+    # @return [Array<Integer>] the length of each note
+    def lengths
+      super.map { |length| length / 2 }
     end
   end
 
