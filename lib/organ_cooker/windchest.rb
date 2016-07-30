@@ -29,6 +29,7 @@ class OrganCooker::WindChest
 
   include OrganCooker::Shared
 
+  ##
   # Initialize a windchest object
   # @param name [String] the name of the keyboard (ex: "grand-orgue")
   # @param nb_notes [String, Integer] the number of notes

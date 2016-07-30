@@ -6,5 +6,4 @@ require 'organ_cooker/note'
 
 ##
 # Main module for this gem.
-module OrganCooker
-end
+module OrganCooker; end

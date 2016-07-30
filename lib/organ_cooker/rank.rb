@@ -37,7 +37,7 @@ module OrganCooker
     #   w = OrganCooker::WindChest.new("grand-orgue", "56", "c0")
     #   p = OrganCooker::Project.new("mantes-la-jolie", "15", "435")
     #   r = OrganCooker::RankTypeFlute.new("montre", "8", "145", "6", w, p, first_note: "c2")
-    def initialize(name, height, size, progression, windchest_object, project_object, first_note: windchest_object.first_note, prog_change: nil)
+    def initialize(name, height, size, progression, windchest_object, project_object, first_note: windchest_object.first_note, prog_change: {note: nil, size: nil})
       @name        = name
       @height      = height
       @size        = size
@@ -61,8 +61,8 @@ module OrganCooker
       name = @name.gsub(/[[:alpha:]]+/) { |word| word.capitalize }
 
       if @height.include? "/"
-        numbers = digits_scan(@height)
-        "#{name} #{numbers[0]}' #{numbers[1]}/#{numbers[2]}"
+        numbers = digits_scan(@height).map(&:to_i)
+        "#{name} #{numbers[0]}'#{numbers[1]}/#{numbers[2]}"
       else
         "#{name} #{@height}'"
       end
@@ -109,19 +109,25 @@ module OrganCooker
       add_sizes = Proc.new { h_sizes << h_sizes.last / prog.to_f**(1.0 / 48) }
       nb_notes  = notes_range.to_a.size
 
-      if @prog_change.nil?
+      if @prog_change[:note].nil? && @prog_change[:size].nil?
         (nb_notes - 1).times(&add_sizes)
-      else
+      elsif @prog_change[:note] != nil
         progs    = digits_scan(@prog)
+
         prog     = progs[0]
-        nb_notes = (notes_range.min.succ..@prog_change.to_note).to_a.size
+        nb_notes = (notes_range.min.succ..@prog_change[:note].to_note).to_a.size
         nb_notes.times(&add_sizes)
-        prog     = progs[1]
-        nb_notes = (@prog_change.to_note.succ..notes_range.max).to_a.size
+
+        prog         = progs[1]
+        if @prog_change[:size] != nil
+          h_sizes.pop
+          h_sizes << @prog_change[:size]
+        end
+        nb_notes     = (@prog_change[:note].to_note.succ..notes_range.max).to_a.size
         nb_notes.times(&add_sizes)
       end
 
-      h_sizes.map! { |size| size.round(0) }
+      h_sizes.map { |size| size.round(0) }
     end
 
     ##
@@ -134,7 +140,7 @@ module OrganCooker
     #   f = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", w, p, "A1")
     #   f.notes #=> ["A1", "A#1", "B1", "C2"]
     def notes
-      notes_range.to_a.map { |note| note.to_s }
+      notes_range.to_a.map(&:to_s)
     end
 
     private
@@ -159,7 +165,7 @@ module OrganCooker
     #   string = "4 5 78 54 12"
     #   digits_scan(string) #=> ["4", "5", "78", "54", "12"]
     def digits_scan(string)
-      string.scan(/[[:digit:]]+/)
+      string.scan(/[[:digit:]]+\.?[[:digit:]]*/)
     end
   end
 

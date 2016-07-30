@@ -48,7 +48,8 @@ describe OrganCooker::RankTypeFlute do
     w = OrganCooker::WindChest.new("grand-orgue", "56", "C1")
     r = OrganCooker::WindChest.new("grand-orgue", "61", "C1")
     @test_1 = OrganCooker::RankTypeFlute.new("montre", "8", "145", "6", w, p)
-    @test_2 = OrganCooker::RankTypeFlute.new("flûte harmonique", "8", "83", "3 4", r, p, first_note: "C2", prog_change: "f3")
+    @test_2 = OrganCooker::RankTypeFlute.new("flûte harmonique", "8", "83", "3 4", r, p, first_note: "C2", prog_change: {note: "f3", size: nil})
+    @test_3 = OrganCooker::RankTypeFlute.new("flûte harmonique", "8", "83", "3 7.5", r, p, first_note: "C1", prog_change: {note: "f3", size: 83})
     #@test_2 = OrganCooker::RankTypeBourdon.new("bourdon", "8", "86", "5", "64", "a0", p.speed_of_sound, p.diapason)
     #@test_3 = OrganCooker::RankTypeMixtures.new("plein jeu", {:rang1=>["2", "2 2/3", "4", "8"], :rang2=>["-", "2", "2 2/3", "4"], :rang3=>["-", "-", "2", "2 2/3"]}, "84", "7", "56", "c1", p.speed_of_sound, p.diapason, "c1:c2:c3:c4", "3")
     @test_4 = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", r, p, first_note: "C2")
@@ -66,7 +67,7 @@ describe OrganCooker::RankTypeFlute do
     # end
 
     it "should return capitalized words with fraction" do
-      @test_4.name.must_equal "Grosse Tierce 1' 3/5"
+      @test_4.name.must_equal "Grosse Tierce 1'3/5"
     end
   end
 
@@ -77,6 +78,10 @@ describe OrganCooker::RankTypeFlute do
 
     it "should return an array of inside diameters with different progressions" do
       @test_2.sizes.must_equal [83, 81, 79, 77, 76, 74, 72, 71, 69, 68, 66, 65, 63, 62, 60, 59, 58, 56, 55, 53, 52, 50, 49, 47, 46, 45, 43, 42, 41, 40, 39, 38, 36, 35, 34, 33, 32, 32, 31, 30, 29, 28, 27, 27, 26, 25, 24, 24, 23]
+    end
+
+    it "should return an array of inside diameters with different progressions & sizes" do
+      @test_3.sizes.must_equal [83, 81, 79, 77, 76, 74, 72, 71, 69, 68, 66, 65, 63, 62, 60, 59, 58, 56, 55, 54, 53, 51, 50, 49, 48, 47, 46, 45, 44, 83, 80, 76, 73, 70, 67, 65, 62, 59, 57, 55, 52, 50, 48, 46, 44, 42, 41, 39, 37, 36, 34, 33, 32, 30, 29, 28, 27, 26, 25, 24, 23]
     end
   end
 
