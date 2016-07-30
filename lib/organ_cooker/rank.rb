@@ -112,21 +112,20 @@ module OrganCooker
       if @prog_change[:note].nil? && @prog_change[:size].nil?
         (nb_notes - 1).times(&add_sizes)
       elsif @prog_change[:note] != nil
-        progs    = digits_scan(@prog)
+        progs = digits_scan(@prog)
 
         prog     = progs[0]
         nb_notes = (notes_range.min.succ..@prog_change[:note].to_note).to_a.size
         nb_notes.times(&add_sizes)
 
-        prog         = progs[1]
+        prog = progs[1]
         if @prog_change[:size] != nil
           h_sizes.pop
           h_sizes << @prog_change[:size]
         end
-        nb_notes     = (@prog_change[:note].to_note.succ..notes_range.max).to_a.size
+        nb_notes = (@prog_change[:note].to_note.succ..notes_range.max).to_a.size
         nb_notes.times(&add_sizes)
       end
-
       h_sizes.map { |size| size.round(0) }
     end
 
@@ -181,42 +180,43 @@ module OrganCooker
     end
   end
 
-  # Cette classe permet de créer un jeu de type "Fournitures"
-  # avec plusieurs rangs et des reprises.
-  class RankTypeMixtures
+  ##
+  # Defines a +mixtures-type rank+. That means with opened pipes and rows.
+  class RankTypeMixtures < RankTypeFlute
 
+    ##
     # Initialisation des instances.
-    def initialize(name, height, size, prog, nb_notes, start_note, sound_speed, diapason, notes_reprises, nb_rows)
-      super(name, height, size, prog, nb_notes, start_note, sound_speed, diapason)
-      @notes_reprises = notes_reprises
-      @nb_rows       = nb_rows
+    def initialize(name, heights, size, progression, windchest_object, project_object, breaks_notes, first_note: windchest_object.first_note)
+
+      @name             = name
+      @heights          = heights
+      @size             = size
+      @progression      = progression
+      @windchest_object = windchest_object
+      @project_object   = project_object
+      @breaks_notes     = breaks_notes
+      @first_note       = first_note
     end
 
-    # Méthode pour avoir le name complet du jeu.
-    def nom
-      name   = @name.split.each { |mot| mot.capitalize! }.join(' ')
-      rangs = @nb_rangs.scan(/\d+/).map { |rang| rang = rang.to_i.to_roman.to_s }.join('-')
-      "#{name} #{rangs}"
-    end
+    ##
+    # Returns object +name+ with number of +rows+
+    # @api public
+    # @return [String] the name of the rank
+    # @example
+    #   p = OrganCooker::Project.new("mantes-la-jolie", "18", "440")
+    #   w = OrganCooker::WindChest.new("grand-orgue", "61", "C1")
+    #   r = OrganCooker::RankTypeMixtures.new("plein-jeu", {row_1: ["2", "2 2/3", "4", "4"], row_2: ["1 1/3", "2", "2 2/3", "4"], row_3: ["1", "1 1/3", "2", "2 2/3"], row_4: [nil, "1", "1 1/3", "2"]}, "80", "5", w, p, ["c1", "c2", "c3", "g#5"])
+    #   r.name #=> "Plein-Jeu III-IV"
+    def name
+      name  = @name.gsub(/[[:alpha:]]+/) { |word| word.capitalize }
+      unrow = @heights.size
 
-    def diams_ext
-      diams_ext = {}
-      sizes.each do |rang, tab_sizes|
-        diams_ext[rang] = tab_sizes.map do |size|
-          if size == '-'
-            size
-          else
-            ep_metal = 0.3
-            diam_ref = 10
-            until size <= diam_ref
-              ep_metal += 0.05
-              diam_ref += 5
-            end
-            size + (ep_metal.round(2) * 2)
-          end
+      @heights.each_value do |v|
+        if v.include?(nil)
+          unrow -= 1
         end
       end
-      diams_ext
+      @heights.size != unrow ? "#{name} #{unrow.to_roman}-#{@heights.size.to_roman}" : "#{name} #{@heights.size.to_roman}"
     end
 
     def sizes(typejeu: Rank)
