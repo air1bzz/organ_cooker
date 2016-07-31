@@ -128,23 +128,6 @@ class OrganCooker::Note
   end
 
   ##
-  # Returns the next note
-  # @api public
-  # @return [String] a string of next note
-  # @example
-  #   n = OrganCooker::Note.new("g#1") #=> G#1
-  #   n.next_note                      #=> "A1"
-  def next_note
-    index  = NOTES.index(@letter) + 1
-    octave = @octave
-    if index == 12
-      index   = 0
-      octave += 1
-    end
-    "#{NOTES[index]}#{octave}"
-  end
-
-  ##
   # Returns the previous note
   # @api public
   # @return [OrganCooker::Note] the previous object
@@ -241,7 +224,11 @@ class OrganCooker::Note
   def height_decimal(height)
     if height.include?('/')
       chiffres = height.scan(/\d+/).map { |i| i.to_f }
-      chiffres[0] + chiffres[1] / chiffres[2]
+      if chiffres.size == 3
+        chiffres[0] + chiffres[1] / chiffres[2]
+      else
+        chiffres[0] / chiffres[1]
+      end
     else
       height.to_f
     end

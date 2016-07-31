@@ -187,15 +187,14 @@ module OrganCooker
     ##
     # Initialisation des instances.
     def initialize(name, heights, size, progression, windchest_object, project_object, breaks_notes, first_note: windchest_object.first_note)
-
-      @name             = name
-      @heights          = heights
-      @size             = size
-      @progression      = progression
-      @windchest_object = windchest_object
-      @project_object   = project_object
-      @breaks_notes     = breaks_notes
-      @first_note       = first_note
+      @name         = name
+      @heights      = heights
+      @size         = size
+      @progression  = progression
+      @windchest    = windchest_object
+      @project      = project_object
+      @breaks_notes = breaks_notes
+      @first_note   = first_note
     end
 
     ##
@@ -249,26 +248,50 @@ module OrganCooker
       h_sizes
     end
 
-    def frequences
-      frequences = {}
-      objets_par_rang().each do |rang, objets|
-        frequences[rang] = []
-        objets.each do |objet|
-           objet == '-' ? frequences[rang] << objet : frequences[rang].concat(objet.frequences)
+    def frequencies
+      frequencies  = {}
+      enum_heights = @heights.values.each
+      enum_range   = breaks_range.each
+      enum_keys    = @heights.keys.each
+
+      enum_heights.each do |heights|
+        freqs = []
+        heights.each do |height|
+          if height.nil?
+            enum_range.next.to_a.size.times { freqs << nil }
+          else
+            freqs << enum_range.next.to_a.map { |note| note.frequency(diapason: @project.diapason, height: height).round(2) }
+          end
         end
+        enum_range.rewind
+        frequencies[enum_keys.next] = freqs.flatten
       end
-      return frequences
+      frequencies
     end
 
-    def longueurs(diviseur: 1)
-      longueurs = {}
-      frequences().each do |rang, tab_freqs|
-        longueurs[rang] = tab_freqs.map { |frequence| frequence == '-' ? frequence : (@sound_speed / (frequence * 2) * 1000) / diviseur }
+    def lengths
+      frequencies.each_value do |value|
+        value.map! { |frequency| (@project.speed_of_sound / (frequency * 2) * 1000).round(0) }
       end
-      longueurs
     end
 
     private
+
+    def breaks_range
+      breaks_range = []
+      enum = @breaks_notes.map(&:to_note).each
+
+      enum.next
+      breaks_range << (@first_note.to_note..enum.peek.prev)
+      enum.each do
+        begin
+          breaks_range << (enum.next..enum.peek.prev)
+        rescue StopIteration
+          breaks_range << (@breaks_notes.last.to_note..@windchest.last_note)
+        end
+      end
+      breaks_range
+    end
 
     def objets_par_rang(typejeu: RankTypeFlute)
       objets = {}
