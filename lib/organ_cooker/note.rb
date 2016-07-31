@@ -48,6 +48,7 @@ end
 #   r.include?(OrganCooker::Note.new("g#1")) #=> true
 class OrganCooker::Note
 
+  include OrganCooker::Shared
   include Comparable
 
   ##
@@ -210,27 +211,5 @@ class OrganCooker::Note
   #   #=> G#1
   def inspect
     "#{@letter}#{@octave}"
-  end
-
-  private
-
-  ##
-  # Returns a float height for a fraction entry (ex: 2'2/3)
-  # @api private
-  # @return [Float]
-  # @param height [String]
-  # @example
-  #   height_decimal("2'2/3") #=> 2.6666666666666665
-  def height_decimal(height)
-    if height.include?('/')
-      chiffres = height.scan(/\d+/).map { |i| i.to_f }
-      if chiffres.size == 3
-        chiffres[0] + chiffres[1] / chiffres[2]
-      else
-        chiffres[0] / chiffres[1]
-      end
-    else
-      height.to_f
-    end
   end
 end

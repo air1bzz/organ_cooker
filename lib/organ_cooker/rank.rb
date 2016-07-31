@@ -184,6 +184,8 @@ module OrganCooker
   # Defines a +mixtures-type rank+. That means with opened pipes and rows.
   class RankTypeMixtures < RankTypeFlute
 
+    include Shared
+
     ##
     # Initialisation des instances.
     def initialize(name, heights, size, progression, windchest_object, project_object, breaks_notes, first_note: windchest_object.first_note)
@@ -271,7 +273,7 @@ module OrganCooker
 
     def lengths
       frequencies.each_value do |value|
-        value.map! { |frequency| (@project.speed_of_sound / (frequency * 2) * 1000).round(0) }
+        value.map! { |frequency| frequency.nil? ? nil : (@project.speed_of_sound / (frequency * 2) * 1000).round(0) }
       end
     end
 

@@ -26,6 +26,16 @@ class OrganCooker::WindChest
   #   @param value [String] the new lowest note
   # @return [String] the lowest note
   attr_accessor :first_note
+  ##
+  # @overload foot_height
+  #   Gets the current height of pipe's foot
+  #   @api public
+  # @overload foot_height=(value)
+  #   Sets the new height of pipe's foot
+  #   @api public
+  #   @param value [Integer] the new height of pipe's foot
+  # @return [Integer] the height of pipe's foot
+  attr_accessor :foot_height
 
   include OrganCooker::Shared
 
@@ -40,10 +50,11 @@ class OrganCooker::WindChest
   #   * a +letter+ C, C#, D, D#, E, F, F#, G, G#, A, A#, B
   #   * followed by +octave+ number
   #   A3 correspond to the 3rd A of a 8 feet rank and is the +diapason+
-  def initialize(name, nb_notes="61", first_note="C1")
-    @name       = name
-    @nb_notes   = nb_notes
-    @first_note = first_note
+  def initialize(name, nb_notes="61", first_note="C1", foot_height="200")
+    @name        = name
+    @nb_notes    = nb_notes
+    @first_note  = first_note
+    @foot_height = foot_height
   end
 
   ##
