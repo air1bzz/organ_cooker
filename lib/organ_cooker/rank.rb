@@ -171,7 +171,7 @@ module OrganCooker
     def sizes
       h_sizes   = [@size]
       prog      = @prog
-      add_sizes = Proc.new { h_sizes << h_sizes.last / prog.to_i**(1.0 / 48) }
+      add_sizes = Proc.new { h_sizes << h_sizes.last / prog.to_f**(1.0 / 48) }
       nb_notes  = notes_range.to_a.size
 
       if @prog_change.nil?
@@ -180,7 +180,7 @@ module OrganCooker
         nb_notes = (notes_range.min.succ..@prog_change[:note]).to_a.size
         nb_notes.times(&add_sizes)
 
-        prog = @prog_change[:prog]
+        prog = @prog_change[:prog].to_f
         if @prog_change[:size] != nil
           h_sizes.pop
           h_sizes << @prog_change[:size]
@@ -224,8 +224,8 @@ module OrganCooker
     # @param [String]
     # @return [Array] an array of numbers
     # @example
-    #   string = "4 5 78 54 12"
-    #   digits_scan(string) #=> ["4", "5", "78", "54", "12"]
+    #   string = "4 5 78 7.5 54 12"
+    #   digits_scan(string) #=> ["4", "5", "78", "7.5", "54", "12"]
     def digits_scan(string)
       string.scan(/[[:digit:]]+\.?[[:digit:]]*/)
     end
@@ -376,7 +376,7 @@ module OrganCooker
 
   # Cette classe permet de créer un jeu de type "Cornet"
   # (donc bouché) avec plusieurs rangs et des reprises.
-  class RankTypeCornet
+  class RankTypeCornet < RankTypeMixtures
 
     def lengths
       super.each_value do |value|
