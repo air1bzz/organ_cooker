@@ -5,7 +5,6 @@ class String
 
   ##
   # Converts string to +music note+ object
-  #
   # @return [OrganCooker::Note]
   # @api public
   # @example
@@ -52,20 +51,21 @@ class OrganCooker::Note
   include Comparable
 
   ##
-  # An array of notes letters
+  # An array of +music notes+ letters
   # @return [Array] the twelve music notes
   NOTES = %w(C C# D D# E F F# G G# A A# B)
 
   ##
-  # Gets the letter of the note
+  # Gets the +letter+ of the note
   # @api public
   # @return [String] the letter of the note
   # @example
   #   n = OrganCooker::Note.new("a#4")
   #   n.letter #=> "A#"
   attr_reader :letter
+
   ##
-  # Gets the octave of the note
+  # Gets the +octave+ of the note
   # @api public
   # @return [Fixnum] the octave of the note
   # @example
@@ -74,7 +74,7 @@ class OrganCooker::Note
   attr_reader :octave
 
   ##
-  # Initialize a music note object
+  # Initialize a +music note+ object
   # @param music_note [String]
   # @example
   #   OrganCooker::Note.new("a#4") #=> A#4
@@ -97,10 +97,10 @@ class OrganCooker::Note
   end
 
   ##
-  # Finds the last note from first note and a number of notes
+  # Finds the +last note+ from +first note+ and a +number of notes+
   # @api public
-  # @return [OrganCooker::Note] the last note object
   # @param nb_notes [Integer] the number of notes
+  # @return [OrganCooker::Note] the last note object
   # @example
   #   n = OrganCooker::Note.new("c1")
   #   n.find_last_note(61) #=> C6
@@ -113,11 +113,11 @@ class OrganCooker::Note
   end
 
   ##
-  # Finds the frequency of a note by +diapason+ and +feet height+
+  # Finds the +frequency+ of a note by +diapason+ and +feet height+
   # @api public
-  # @return [Float] the frequency of the note
   # @param diapason [Numeric] the frequency reference
   # @param height [String] the height of the note (in feet)
+  # @return [Float] the frequency of the note
   # @example
   #   n = OrganCooker::Note.new("a3")
   #   n.frequency #=> 440.0
@@ -129,7 +129,7 @@ class OrganCooker::Note
   end
 
   ##
-  # Returns the previous note
+  # Returns the +previous note+ object
   # @api public
   # @return [OrganCooker::Note] the previous object
   # @example
@@ -149,7 +149,7 @@ class OrganCooker::Note
   end
 
   ##
-  # Returns next music note object
+  # Returns +next note+ object
   # @api public
   # @return [OrganCooker::Note] the next object
   # @example
@@ -169,7 +169,7 @@ class OrganCooker::Note
   end
 
   ##
-  # Compares two music notes each other
+  # +Compares+ two +music notes+ each other
   # @api public
   # @return [Fixnum] returns -1 if less than, 0 if equal to, or 1 if greater than.
   # @example
@@ -191,7 +191,7 @@ class OrganCooker::Note
   end
 
   ##
-  # Returns the string representation of object
+  # Returns the +string+ representation of object
   # @api public
   # @return [String]
   # @example
@@ -201,7 +201,7 @@ class OrganCooker::Note
   end
 
   ##
-  # Overrides inspect native method for a human-readable representation of object
+  # Overrides inspect native method for a +human-readable+ representation of object
   # @api public
   # @return [String]
   # @example Native and modified method

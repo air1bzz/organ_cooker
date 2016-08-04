@@ -7,8 +7,7 @@ module OrganCooker
   class RankTypeFlute
 
     ##
-    # Gets the +toe holes+ of the rank
-    ##
+    # The +toe holes+ of the rank
     # @overload toe_holes
     #   Gets the current toe holes
     #   @api public
@@ -20,24 +19,90 @@ module OrganCooker
     attr_accessor :toe_holes
 
     ##
+    # The +windchest+ the rank belongs to
+    # @overload windchest
+    #   Gets the current windchest
+    #   @api public
+    # @overload windchest=(value)
+    #   Sets the new windchest
+    #   @api public
+    #   @param value [OrganCooker::Windchest] the new windchest
+    # @return [OrganCooker::Windchest] the windchest
+    attr_accessor :windchest
+
+    ##
+    # The +project+ the rank belongs to
+    # @overload project
+    #   Gets the current project
+    #   @api public
+    # @overload project=(value)
+    #   Sets the new project
+    #   @api public
+    #   @param value [OrganCooker::project] the new project
+    # @return [OrganCooker::project] the project
+    attr_accessor :project
+
+    ##
+    # Sets the new +name+ of the rank
+    # @api public
+    # @param value [String] the new name
+    # @return [string]
+    attr_writer :name
+
+    ##
+    # Sets the new height
+    # @api public
+    # @param value [String] the new height
+    # @return [String] the height
+    attr_writer :height
+
+    ##
+    # Sets the new diameter
+    # @api public
+    # @param value [Integer] the new diameter
+    # @return [Integer] the diameter
+    attr_writer :size
+
+    ##
+    # Sets the new progression
+    # @api public
+    # @param value [Float] the new progression
+    # @return [Float] the progression
+    attr_writer :prog
+
+    ##
+    # Sets the new first note
+    # @api public
+    # @param value [Float] the new first note
+    # @return [Float] the first note
+    attr_writer :first_note
+
+    ##
+    # The current harmonic +progression+ changes
+    # @param value [Hash{note: OrganCooker::Note, prog: Float, size: Integer}, Nil] the new progression changes
+    # @return [Hash{note: OrganCooker::Note, prog: Float, size: Integer}, Nil] the progression changes
+    # @api public
+    attr_writer :prog_change
+
+    ##
     # Initialize a +flute-type rank+ object
     # @param name [String] a name (ex: "montre")
     # @param height [String] the height (in feet) for the lowest pipe (ex: "4", "2 2/3")
-    # @param size [String, Numeric] the size (internal diameter) for the lowest pipe
-    #   (ex: "145")
-    # @param progression [String, Numeric] the progression
+    # @param size [Integer] the size (internal diameter) for the lowest pipe
+    #   (ex: 145)
+    # @param progression [Numeric] the progression
     # @param windchest_object [OrganCooker::WindChest] the windchest object that
     #   the rank belongs to
     # @param project_object [OrganCooker::Project] the project object that the
     #   rank belongs to
-    # @param first_note [String] (optional) the lowest note (if different than
+    # @param first_note [OrganCooker::Note] (optional) the lowest note (if different than
     #   the windchest's one)
-    # @param prog_change [OrganCooker::Note] (optional) the note where progression is changing
+    # @param prog_change [Hash{note: OrganCooker::Note, prog: Float, size: Integer}, Nil] (optional) the note where progression is changing
     # @example
-    #   w = OrganCooker::WindChest.new("grand-orgue", "56", "c0")
-    #   p = OrganCooker::Project.new("mantes-la-jolie", "15", "435")
-    #   r = OrganCooker::RankTypeFlute.new("montre", "8", "145", "6", w, p, first_note: "c2")
-    def initialize(name, height, size, progression, windchest_object, project_object, first_note: windchest_object.first_note, prog_change: {note: nil, size: nil})
+    #   w = OrganCooker::WindChest.new("grand-orgue", 56, OrganCooker::Note.new("c0"))
+    #   p = OrganCooker::Project.new("mantes-la-jolie", 15, 435)
+    #   r = OrganCooker::RankTypeFlute.new("montre", "8", 145, 6, w, p, first_note: OrganCooker::Note.new("c2"))
+    def initialize(name, height, size, progression, windchest_object, project_object, first_note: windchest_object.first_note, prog_change: nil)
       @name        = name
       @height      = height
       @size        = size
@@ -49,15 +114,15 @@ module OrganCooker
     end
 
     ##
-    # Returns object +name+ with +height+
+    # Returns rank +name+ with +height+
     # @api public
     # @return [String] the name of the rank
     # @example
     #   p = OrganCooker::Project.new("mantes-la-jolie", "18", "440")
     #   w = OrganCooker::WindChest.new("grand-orgue", "56", "C1")
     #   r = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", r, p, first_note: "C2")
-    #   r.name #=> "Grosse Tierce 1' 3/5"
-    def name
+    #   r.full_name #=> "Grosse Tierce 1' 3/5"
+    def full_name
       name = @name.gsub(/[[:alpha:]]+/) { |word| word.capitalize }
 
       if @height.include? "/"
@@ -104,26 +169,23 @@ module OrganCooker
     #   r = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", w, p, first_note: "C2")
     #   r.sizes #=> [50, 48, 47, 45, 44, 42, 41, 40, 38, 37, 36, 35...]
     def sizes
-      h_sizes   = [@size.to_i]
+      h_sizes   = [@size]
       prog      = @prog
-      add_sizes = Proc.new { h_sizes << h_sizes.last / prog.to_f**(1.0 / 48) }
+      add_sizes = Proc.new { h_sizes << h_sizes.last / prog.to_i**(1.0 / 48) }
       nb_notes  = notes_range.to_a.size
 
-      if @prog_change[:note].nil? && @prog_change[:size].nil?
+      if @prog_change.nil?
         (nb_notes - 1).times(&add_sizes)
       elsif @prog_change[:note] != nil
-        progs = digits_scan(@prog)
-
-        prog     = progs[0]
-        nb_notes = (notes_range.min.succ..@prog_change[:note].to_note).to_a.size
+        nb_notes = (notes_range.min.succ..@prog_change[:note]).to_a.size
         nb_notes.times(&add_sizes)
 
-        prog = progs[1]
+        prog = @prog_change[:prog]
         if @prog_change[:size] != nil
           h_sizes.pop
           h_sizes << @prog_change[:size]
         end
-        nb_notes = (@prog_change[:note].to_note.succ..notes_range.max).to_a.size
+        nb_notes = (@prog_change[:note].succ..notes_range.max).to_a.size
         nb_notes.times(&add_sizes)
       end
       h_sizes.map { |size| size.round(0) }
@@ -153,12 +215,13 @@ module OrganCooker
     #   r.class #=> Range
     #   r.to_a.size #=> 45
     def notes_range
-      (@first_note.to_note..@windchest.last_note)
+      (@first_note..@windchest.last_note)
     end
 
     ##
     # Returns an array of numbers
     # @api private
+    # @param [String]
     # @return [Array] an array of numbers
     # @example
     #   string = "4 5 78 54 12"
@@ -185,6 +248,7 @@ module OrganCooker
   class RankTypeMixtures < RankTypeFlute
 
     include Shared
+    undef_method(:height=)
 
     ##
     # Initialisation des instances.
@@ -192,7 +256,7 @@ module OrganCooker
       @name         = name
       @heights      = heights
       @size         = size
-      @progression  = progression
+      @prog         = progression
       @windchest    = windchest_object
       @project      = project_object
       @breaks_notes = breaks_notes
@@ -207,8 +271,8 @@ module OrganCooker
     #   p = OrganCooker::Project.new("mantes-la-jolie", "18", "440")
     #   w = OrganCooker::WindChest.new("grand-orgue", "61", "C1")
     #   r = OrganCooker::RankTypeMixtures.new("plein-jeu", {row_1: ["2", "2 2/3", "4", "4"], row_2: ["1 1/3", "2", "2 2/3", "4"], row_3: ["1", "1 1/3", "2", "2 2/3"], row_4: [nil, "1", "1 1/3", "2"]}, "80", "5", w, p, ["c1", "c2", "c3", "g#5"])
-    #   r.name #=> "Plein-Jeu III-IV"
-    def name
+    #   r.full_name #=> "Plein-Jeu III-IV"
+    def full_name
       name  = @name.gsub(/[[:alpha:]]+/) { |word| word.capitalize }
       unrow = @heights.size
 
@@ -219,6 +283,7 @@ module OrganCooker
       end
       @heights.size != unrow ? "#{name} #{unrow.to_roman}-#{@heights.size.to_roman}" : "#{name} #{@heights.size.to_roman}"
     end
+
 
     def sizes(typejeu: Rank)
       h_sizes    = {}
@@ -253,7 +318,7 @@ module OrganCooker
     def frequencies
       frequencies  = {}
       enum_heights = @heights.values.each
-      enum_range   = breaks_range.each
+      enum_range   = breaks_ranges.each
       enum_keys    = @heights.keys.each
 
       enum_heights.each do |heights|
@@ -279,65 +344,20 @@ module OrganCooker
 
     private
 
-    def breaks_range
-      breaks_range = []
-      enum = @breaks_notes.map(&:to_note).each
+    def breaks_ranges
+      breaks_ranges = []
+      enum = @breaks_notes.each
 
       enum.next
-      breaks_range << (@first_note.to_note..enum.peek.prev)
+      breaks_ranges << (@first_note.to_note..enum.peek.prev)
       enum.each do
         begin
-          breaks_range << (enum.next..enum.peek.prev)
+          breaks_ranges << (enum.next..enum.peek.prev)
         rescue StopIteration
-          breaks_range << (@breaks_notes.last.to_note..@windchest.last_note)
+          breaks_ranges << (@breaks_notes.last.to_note..@windchest.last_note)
         end
       end
-      breaks_range
-    end
-
-    def objets_par_rang(typejeu: RankTypeFlute)
-      objets = {}
-      @height.each do |rang, height|
-        index    = 0
-        objets_par_rang = []
-        height.each do |h|
-          nb_notes    = reprises[:nb_notes][index]
-          start_note = reprises[:notes][index]
-          if h == '-'
-            nb_notes.times { |i| objets_par_rang << '-'}
-          else
-            objet = typejeu.new(@nom, h, @size, @prog, nb_notes, start_note, @sound_speed, @diapason)
-            objets_par_rang << objet
-          end
-          index += 1
-        end
-        objets[rang] = objets_par_rang
-      end
-      objets
-    end
-
-    # Renvoi la note de départ et les notes de reprises,
-    # ainsi que l'écart entre chaque note.
-    def reprises
-      reprises = {}
-      notes_reprises = @notes_reprises.split(':').each { |reprise| reprise.upcase! }.unshift(notes.first).uniq
-      h_sizes = []
-      notes_reprises.size.times do |index|
-        start = notes.index(notes_reprises[index])
-        if index == notes_reprises.index(notes_reprises.last)
-          stop = notes.index(notes.last)
-          size = notes[start..stop].size
-        else
-          stop = notes.index(notes_reprises[index + 1])
-          size = notes[start...stop].size
-        end
-        h_sizes << size
-      end
-      reprises = {
-        notes:    notes_reprises,
-        nb_notes: h_sizes
-      }
-      reprises
+      breaks_ranges
     end
 
     # Permet de trouver la valeur d'un tableau la plus proche d'une valeur donnée.
@@ -358,8 +378,10 @@ module OrganCooker
   # (donc bouché) avec plusieurs rangs et des reprises.
   class RankTypeCornet
 
-    def longueurs(diviseur: 2)
-      super
+    def lengths
+      super.each_value do |value|
+        value.map! { |length| length / 2 }
+      end
     end
 
     private

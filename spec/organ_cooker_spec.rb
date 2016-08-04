@@ -2,18 +2,8 @@ require 'spec_helper'
 
 describe OrganCooker::Project do
   before do
-    @test_1 = OrganCooker::Project.new("mantes-la-jolie", "18", "435")
-    @test_2 = OrganCooker::Project.new("saint léonard", "15", "440")
-  end
-
-  describe "#name" do
-    it "should return capitalized words" do
-      @test_1.name.must_equal "Mantes-La-Jolie"
-    end
-
-    it "should return capitalized words even with accents" do
-      @test_2.name.must_equal "Saint Léonard"
-    end
+    @test_1 = OrganCooker::Project.new("Mantes-La-Jolie", 18, 435)
+    @test_2 = OrganCooker::Project.new("Saint Léonard", 15, 440)
   end
 
   describe "#speed_of_sound" do
@@ -26,13 +16,7 @@ end
 
 describe OrganCooker::WindChest do
   before do
-    @test_1 = OrganCooker::WindChest.new("grand-orgue", "56")
-  end
-
-  describe "#name" do
-    it "should return capitalized words" do
-      @test_1.name.must_equal "Grand-Orgue"
-    end
+    @test_1 = OrganCooker::WindChest.new("Grand-Orgue", 56)
   end
 
   describe "#last_note" do
@@ -44,35 +28,65 @@ end
 
 describe OrganCooker::RankTypeFlute do
   before do
-    p = OrganCooker::Project.new("mantes-la-jolie", "18", "440")
-    w = OrganCooker::WindChest.new("grand-orgue", "56", "C1")
-    r = OrganCooker::WindChest.new("grand-orgue", "61", "C1")
-    @test_1 = OrganCooker::RankTypeFlute.new("montre", "8", "145", "6", w, p)
-    @test_2 = OrganCooker::RankTypeFlute.new("flûte harmonique", "8", "83", "3 4", r, p, first_note: "C2", prog_change: {note: "f3", size: nil})
-    @test_3 = OrganCooker::RankTypeFlute.new("flûte harmonique", "8", "83", "3 7.5", r, p, prog_change: {note: "f3", size: 83})
-    @test_4 = OrganCooker::RankTypeMixtures.new("plein-jeu", {row_1: ["2", "2 2/3", "4", "4"], row_2: ["1 1/3", "2", "2 2/3", "4"], row_3: ["1", "1 1/3", "2", "2 2/3"], row_4: [nil, "1", "1 1/3", "2"]}, "80", "5", w, p, ["c1", "c2", "c3", "g#5"])
-    @test_5 = OrganCooker::RankTypeMixtures.new("plein-jeu", {row_1: ["2", "2 2/3", "4", "4"], row_2: ["1 1/3", "2", "2 2/3", "4"], row_3: ["1", "1 1/3", "2", "2 2/3"]}, "80", "5", w, p, ["c1", "c2", "c3", "g#5"])
-    @test_6 = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", r, p, first_note: "C2")
-    @test_7 = OrganCooker::RankTypeBourdon.new("bourdon", "8", "86", "5", r, p)
+    p = OrganCooker::Project.new("Mantes-La-Jolie", 18, 440)
+    w = OrganCooker::WindChest.new("Grand-Orgue", 56, OrganCooker::Note.new("C1"))
+    r = OrganCooker::WindChest.new("Grand-Orgue", 61, OrganCooker::Note.new("C1"))
+    @test_1 = OrganCooker::RankTypeFlute.new("montre", "8", 145, 6, w, p)
+    @test_2 = OrganCooker::RankTypeFlute.new("flûte harmonique", "8",
+                                             83, 3, r, p,
+                                             first_note: OrganCooker::Note.new("C2"),
+                                             prog_change: { note: OrganCooker::Note.new("f3"), prog: 4 })
+    @test_3 = OrganCooker::RankTypeFlute.new("flûte harmonique", "8",
+                                             83, 3, r, p,
+                                             prog_change: { note: OrganCooker::Note.new("f3"), prog: 7.5, size: 83 })
+    @test_4 = OrganCooker::RankTypeMixtures.new("plein-jeu",
+                                                {
+                                                  row_1: ["2", "2 2/3", "4", "4"],
+                                                  row_2: ["1 1/3", "2", "2 2/3", "4"],
+                                                  row_3: ["1", "1 1/3", "2", "2 2/3"],
+                                                  row_4: [nil, "1", "1 1/3", "2"]
+                                                },
+                                                80, 5, w, p,
+                                                [
+                                                  OrganCooker::Note.new("c1"),
+                                                  OrganCooker::Note.new("c2"),
+                                                  OrganCooker::Note.new("c3"),
+                                                  OrganCooker::Note.new("g#5")
+                                                ])
+    @test_5 = OrganCooker::RankTypeMixtures.new("plein-jeu",
+                                                {
+                                                  row_1: ["2", "2 2/3", "4", "4"],
+                                                  row_2: ["1 1/3", "2", "2 2/3", "4"],
+                                                  row_3: ["1", "1 1/3", "2", "2 2/3"]
+                                                },
+                                                80, 5, w, p,
+                                                [
+                                                  OrganCooker::Note.new("c1"),
+                                                  OrganCooker::Note.new("c2"),
+                                                  OrganCooker::Note.new("c3"),
+                                                  OrganCooker::Note.new("g#5")
+                                                ])
+    @test_6 = OrganCooker::RankTypeFlute.new("grosse tierce", "1 3/5", 50, 5, r, p, first_note: OrganCooker::Note.new("C2"))
+    @test_7 = OrganCooker::RankTypeBourdon.new("bourdon", "8", 86, 5, r, p)
   end
 
-  describe "#name" do
+  describe "#full_name" do
     it "should return capitalized words with height" do
-      @test_1.name.must_equal "Montre 8'"
-      @test_2.name.must_equal "Flûte Harmonique 8'"
-      @test_7.name.must_equal "Bourdon 8'"
+      @test_1.full_name.must_equal "Montre 8'"
+      @test_2.full_name.must_equal "Flûte Harmonique 8'"
+      @test_7.full_name.must_equal "Bourdon 8'"
     end
 
     it "should return capitalized words with rows" do
-      @test_5.name.must_equal "Plein-Jeu III"
+      @test_5.full_name.must_equal "Plein-Jeu III"
     end
 
     it "should return capitalized words with different number of rows" do
-      @test_4.name.must_equal "Plein-Jeu III-IV"
+      @test_4.full_name.must_equal "Plein-Jeu III-IV"
     end
 
     it "should return capitalized words with fraction" do
-      @test_6.name.must_equal "Grosse Tierce 1'3/5"
+      @test_6.full_name.must_equal "Grosse Tierce 1'3/5"
     end
   end
 
@@ -86,7 +100,7 @@ describe OrganCooker::RankTypeFlute do
     end
 
     it "should return an array of inside diameters with different progressions & sizes" do
-      @test_3.sizes.must_equal [83, 81, 79, 77, 76, 74, 72, 71, 69, 68, 66, 65, 63, 62, 60, 59, 58, 56, 55, 54, 53, 51, 50, 49, 48, 47, 46, 45, 44, 83, 80, 76, 73, 70, 67, 65, 62, 59, 57, 55, 52, 50, 48, 46, 44, 42, 41, 39, 37, 36, 34, 33, 32, 30, 29, 28, 27, 26, 25, 24, 23]
+      @test_3.sizes.must_equal [83, 81, 79, 77, 76, 74, 72, 71, 69, 68, 66, 65, 63, 62, 60, 59, 58, 56, 55, 54, 53, 51, 50, 49, 48, 47, 46, 45, 44, 83, 80, 77, 73, 71, 68, 65, 62, 60, 58, 55, 53, 51, 49, 47, 45, 43, 42, 40, 38, 37, 35, 34, 33, 31, 30, 29, 28, 27, 26, 25, 24]
     end
   end
 
@@ -105,7 +119,7 @@ describe OrganCooker::RankTypeFlute do
   end
 
   describe "#lengths" do
-    it "should return an array of sizes" do
+    it "should return an array of lengths" do
       @test_1.lengths.must_equal [2618, 2471, 2332, 2201, 2078, 1961, 1851, 1747, 1649, 1556, 1469, 1387, 1309, 1235, 1166, 1101, 1039, 981, 925, 874, 825, 778, 735, 693, 654, 618, 583, 550, 519, 490, 463, 437, 412, 389, 367, 347, 327, 309, 292, 275, 260, 245, 231, 218, 206, 195, 184, 173, 164, 154, 146, 138, 130, 123, 116, 109]
       @test_6.lengths.must_equal [262, 247, 233, 220, 208, 196, 185, 175, 165, 156, 147, 139, 131, 124, 117, 110, 104, 98, 93, 87, 82, 78, 73, 69, 65, 62, 58, 55, 52, 49, 46, 44, 41, 39, 37, 35, 33, 31, 29, 28, 26, 25, 23, 22, 21, 19, 18, 17, 16]
     end

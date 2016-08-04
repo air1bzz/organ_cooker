@@ -2,21 +2,10 @@
 # This module is shared by different classes.
 module OrganCooker::Shared
 
-  ##
-  # Returns object name
-  # @api public
-  # @return [String] the name of object
-  # @example
-  #   p = OrganCooker::Project.new("mantes-la-jolie", "15", "435")
-  #   p.name #=> "Mantes-La-Jolie"
-  def name
-    @name.gsub(/[[:alpha:]]+/) { |word| word.capitalize }
-  end
-
   private
 
   ##
-  # Returns a float height for a fraction entry (ex: 2'2/3)
+  # Returns a +float height+ for a fraction entry (ex: 2'2/3)
   # @api private
   # @return [Float]
   # @param height [String]
