@@ -176,12 +176,12 @@ module OrganCooker
 
       if @prog_change.nil?
         (nb_notes - 1).times(&add_sizes)
-      elsif @prog_change[:note] != nil
+      elsif !@prog_change[:note].nil?
         nb_notes = (notes_range.min.succ..@prog_change[:note]).to_a.size
         nb_notes.times(&add_sizes)
 
         prog = @prog_change[:prog].to_f
-        if @prog_change[:size] != nil
+        if !@prog_change[:size].nil?
           h_sizes.pop
           h_sizes << @prog_change[:size]
         end
