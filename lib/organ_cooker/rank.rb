@@ -1,11 +1,9 @@
 require 'roman'
 
 module OrganCooker
-
   ##
   # Defines a +flute-type rank+. That means with opened pipes.
   class RankTypeFlute
-
     ##
     # The +toe holes+ of the rank
     # @overload toe_holes
@@ -123,9 +121,9 @@ module OrganCooker
     #   r = OrganCooker::RankTypeFlute.new("grosse Tierce", "1 3/5", "50", "5", r, p, first_note: "C2")
     #   r.full_name #=> "Grosse Tierce 1' 3/5"
     def full_name
-      name = @name.gsub(/[[:alpha:]]+/) { |word| word.capitalize }
+      name = @name.gsub(/[[:alpha:]]+/, &:capitalize)
 
-      if @height.include? "/"
+      if @height.include? '/'
         numbers = digits_scan(@height).map(&:to_i)
         "#{name} #{numbers[0]}'#{numbers[1]}/#{numbers[2]}"
       else
@@ -171,7 +169,7 @@ module OrganCooker
     def sizes
       h_sizes   = [@size]
       prog      = @prog
-      add_sizes = Proc.new { h_sizes << h_sizes.last / prog.to_f**(1.0 / 48) }
+      add_sizes = proc { h_sizes << h_sizes.last / prog.to_f**(1.0 / 48) }
       nb_notes  = notes_range.to_a.size
 
       if @prog_change.nil?
@@ -181,7 +179,7 @@ module OrganCooker
         nb_notes.times(&add_sizes)
 
         prog = @prog_change[:prog].to_f
-        if !@prog_change[:size].nil?
+        unless @prog_change[:size].nil?
           h_sizes.pop
           h_sizes << @prog_change[:size]
         end
@@ -234,7 +232,6 @@ module OrganCooker
   ##
   # Defines a +bourdon-type rank+. That means with closed pipes.
   class RankTypeBourdon < RankTypeFlute
-
     ##
     # @see RankTypeFlute#lengths
     # @return [Array<Integer>] the length of each note
@@ -246,7 +243,6 @@ module OrganCooker
   ##
   # Defines a +mixtures-type rank+. That means with opened pipes and rows.
   class RankTypeMixtures < RankTypeFlute
-
     include Shared
     undef_method(:height=)
 
@@ -273,17 +269,14 @@ module OrganCooker
     #   r = OrganCooker::RankTypeMixtures.new("plein-jeu", {row_1: ["2", "2 2/3", "4", "4"], row_2: ["1 1/3", "2", "2 2/3", "4"], row_3: ["1", "1 1/3", "2", "2 2/3"], row_4: [nil, "1", "1 1/3", "2"]}, "80", "5", w, p, ["c1", "c2", "c3", "g#5"])
     #   r.full_name #=> "Plein-Jeu III-IV"
     def full_name
-      name  = @name.gsub(/[[:alpha:]]+/) { |word| word.capitalize }
+      name  = @name.gsub(/[[:alpha:]]+/, &:capitalize)
       unrow = @heights.size
 
       @heights.each_value do |v|
-        if v.include?(nil)
-          unrow -= 1
-        end
+        unrow -= 1 if v.include?(nil)
       end
       @heights.size != unrow ? "#{name} #{unrow.to_roman}-#{@heights.size.to_roman}" : "#{name} #{@heights.size.to_roman}"
     end
-
 
     def sizes(typejeu: Rank)
       h_sizes    = {}
@@ -300,7 +293,7 @@ module OrganCooker
 
       exemple = typejeu.new(@nom, plus_haut_pieds, @size, @prog, nb_notes, @start_note, @sound_speed, @diapason)
 
-      longueurs().each do |rang, tab_longueurs|
+      longueurs.each do |rang, tab_longueurs|
         sizes_par_rang = []
         tab_longueurs.each do |longueur|
           if longueur == '-'
@@ -377,7 +370,6 @@ module OrganCooker
   # Cette classe permet de créer un jeu de type "Cornet"
   # (donc bouché) avec plusieurs rangs et des reprises.
   class RankTypeCornet < RankTypeMixtures
-
     def lengths
       super.each_value do |value|
         value.map! { |length| length / 2 }

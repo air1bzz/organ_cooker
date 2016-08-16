@@ -1,5 +1,5 @@
 module OrganCooker
   ##
   # Increment the version before pushing
-  VERSION = "0.1.0"
+  VERSION = '0.1.0'.freeze
 end
