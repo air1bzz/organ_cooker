@@ -3,7 +3,7 @@ require 'spec_helper'
 describe OrganCooker::Project do
   before do
     @test_1 = OrganCooker::Project.new('Mantes-La-Jolie', 18, 435)
-    @test_2 = OrganCooker::Project.new("Saint L\u00E9onard", 15, 440)
+    @test_2 = OrganCooker::Project.new('Saint Léonard', 15, 440)
   end
 
   describe '#speed_of_sound' do
@@ -81,7 +81,7 @@ describe OrganCooker::RankTypeFlute do
       @test_5.full_name.must_equal 'Plein-Jeu III'
     end
 
-    it 'should return capitalized words with different number of rows' do
+    it 'should return capitalized words and number of rows' do
       @test_4.full_name.must_equal 'Plein-Jeu III-IV'
     end
 
@@ -91,7 +91,7 @@ describe OrganCooker::RankTypeFlute do
   end
 
   describe '#sizes' do
-    it 'should return an array of inside diameters' do
+    it 'should return an array of diameters' do
       @test_1.sizes.must_equal [145, 140, 135, 130, 125, 120, 116, 112, 108,
                                 104, 100, 96, 93, 89, 86, 83, 80, 77, 74, 71,
                                 69, 66, 64, 61, 59, 57, 55, 53, 51, 49, 47, 46,
@@ -99,7 +99,7 @@ describe OrganCooker::RankTypeFlute do
                                 28, 27, 26, 25, 24, 23, 22, 22, 21, 20, 19, 19]
     end
 
-    it 'should return an array of inside diameters with different progressions' do
+    it 'should return an array of diameters with different progressions' do
       @test_2.sizes.must_equal [83, 81, 79, 77, 76, 74, 72, 71, 69, 68, 66, 65,
                                 63, 62, 60, 59, 58, 56, 55, 53, 52, 50, 49, 47,
                                 46, 45, 43, 42, 41, 40, 39, 38, 36, 35, 34, 33,
@@ -107,7 +107,7 @@ describe OrganCooker::RankTypeFlute do
                                 23]
     end
 
-    it 'should return an array of inside diameters with different progressions & sizes' do
+    it 'should return an array of diameters with different progressions & sizes' do
       @test_3.sizes.must_equal [83, 81, 79, 77, 76, 74, 72, 71, 69, 68, 66, 65,
                                 63, 62, 60, 59, 58, 56, 55, 54, 53, 51, 50, 49,
                                 48, 47, 46, 45, 44, 83, 80, 76, 73, 70, 67, 65,

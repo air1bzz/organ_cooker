@@ -5,7 +5,7 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = true
   t.libs << 'spec'
   t.libs << 'lib'
-  t.test_files = FileList['spec/**/*spec*.rb']
+  t.test_files = FileList['spec/**/*_spec.rb']
 end
 
 task default: :test
