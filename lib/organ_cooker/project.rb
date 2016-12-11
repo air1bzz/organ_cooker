@@ -27,6 +27,7 @@ module OrganCooker
     # @return [Numeric] the temperature
     attr_reader :temperature
 
+    ##
     # The +diapason+ of the project
     # @overload diapason
     #   Gets the current diapason
