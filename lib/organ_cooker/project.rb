@@ -13,7 +13,7 @@ module OrganCooker
     #   @api public
     #   @param value [String] the new name
     # @return [string]
-    attr_accessor :name
+    attr_reader :name
 
     ##
     # The +temperature+ of the project
@@ -23,11 +23,10 @@ module OrganCooker
     # @overload temperature=(value)
     #   Sets the new temperature
     #   @api public
-    #   @param value [Float, Integer] the new temperature
-    # @return [Float, Integer] the temperature
-    attr_accessor :temperature
+    #   @param value [Numeric] the new temperature
+    # @return [Numeric] the temperature
+    attr_reader :temperature
 
-    ##
     # The +diapason+ of the project
     # @overload diapason
     #   Gets the current diapason
@@ -35,22 +34,39 @@ module OrganCooker
     # @overload diapason=(value)
     #   Sets the new diapason
     #   @api public
-    #   @param value [Float, Integer] the new diapason
-    # @return [Float, Integer] the diapason
-    attr_accessor :diapason
+    #   @param value [Numeric] the new diapason
+    # @return [Numeric] the diapason
+    attr_reader :diapason
+
+    def name=(name)
+      raise 'The name must be a string.' unless name.is_a?(String)
+      raise 'The name is required.' if name.strip.empty?
+      @name = name.strip.gsub(/[[:alpha:]]+/, &:capitalize)
+    end
+
+    def temperature=(temp)
+      raise 'The temperature must be a number.' unless temp.is_a?(Numeric)
+      raise 'The temperature must be beetween -20°C & 40°C' if temp < -20 || temp > 40
+      @temperature = temp
+    end
+
+    def diapason=(diap)
+      raise 'The diapason must be a number.' unless diap.is_a?(Numeric)
+      raise 'The diapason must be positive' if diap.zero? || diap.negative?
+      @diapason = diap
+    end
 
     ##
     # Initialize a +project+ object
     # @param name [String] the name of the project (quite often a town name)
-    # @param temperature [Float, Integer] the temperature (in Celsius)
-    # @param diapason [Float, Integer] the diapason (in Hertz)
+    # @param temperature [Numeric] the temperature (in Celsius)
+    # @param diapason [Numeric] the diapason (in Hertz)
     # @example
     #   p = OrganCooker::Project.new("new-york", 15, 435)
-    #   #=> #<OrganCooker::Project:0x40eafb0 @diapason=435, @name="new-york", @temperature=15>
     def initialize(name, temperature = 18, diapason = 440)
-      @name        = name
-      @temperature = temperature
-      @diapason    = diapason
+      self.name        = name
+      self.temperature = temperature
+      self.diapason    = diapason
     end
 
     ##
@@ -62,6 +78,16 @@ module OrganCooker
     # @note Source {Wikipedia}[https://en.wikipedia.org/wiki/Speed_of_sound]
     def speed_of_sound
       331.5 + 0.607 * @temperature
+    end
+
+    ##
+    # Displays a +string representation+ of the object
+    # @api public
+    # @return [String] a string representation
+    # @example
+    #   p.to_s #=> "Project: New-York"
+    def to_s
+      "Project: #{name}"
     end
   end
 end
