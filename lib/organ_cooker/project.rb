@@ -1,8 +1,12 @@
+require 'organ_cooker/shared'
+
 module OrganCooker
   ##
   # Represents an organ +project+ with global parameters.
   # These parameters will be used to create organ +ranks+.
   class Project
+
+    include OrganCooker::Shared
     ##
     # The +name+ of the project
     # @overload name
@@ -38,12 +42,6 @@ module OrganCooker
     #   @param value [Numeric] the new diapason
     # @return [Numeric] the diapason
     attr_reader :diapason
-
-    def name=(name)
-      raise 'The name must be a string.' unless name.is_a?(String)
-      raise 'The name is required.' if name.strip.empty?
-      @name = name.strip.gsub(/[[:alpha:]]+/, &:capitalize)
-    end
 
     def temperature=(temp)
       raise 'The temperature must be a number.' unless temp.is_a?(Numeric)

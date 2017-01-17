@@ -2,8 +2,15 @@ require 'spec_helper'
 
 describe OrganCooker::Project do
   before do
-    @test_1 = OrganCooker::Project.new('Mantes-La-Jolie', 18, 435)
-    @test_2 = OrganCooker::Project.new('Saint Léonard', 15, 440)
+    @test_1 = OrganCooker::Project.new('mantes-la-jolie', 18, 435)
+    @test_2 = OrganCooker::Project.new('saint léonard', 15, 440)
+  end
+
+  describe '#name' do
+    it 'should return capitalized words' do
+      @test_1.name.must_equal "Mantes-La-Jolie"
+      @test_2.name.must_equal "Saint Léonard"
+    end
   end
 
   describe '#speed_of_sound' do
@@ -16,7 +23,13 @@ end
 
 describe OrganCooker::WindChest do
   before do
-    @test_1 = OrganCooker::WindChest.new('Grand-Orgue', 56)
+    @test_1 = OrganCooker::WindChest.new('grand-orgue', 56)
+  end
+
+  describe '#name' do
+    it 'should return capitalized words' do
+      @test_1.name.must_equal "Grand-Orgue"
+    end
   end
 
   describe '#last_note' do
@@ -91,7 +104,7 @@ describe OrganCooker::RankTypeFlute do
   end
 
   describe '#sizes' do
-    it 'should return an array of diameters' do
+    it 'should return diameters' do
       @test_1.sizes.must_equal [145, 140, 135, 130, 125, 120, 116, 112, 108,
                                 104, 100, 96, 93, 89, 86, 83, 80, 77, 74, 71,
                                 69, 66, 64, 61, 59, 57, 55, 53, 51, 49, 47, 46,
@@ -99,7 +112,7 @@ describe OrganCooker::RankTypeFlute do
                                 28, 27, 26, 25, 24, 23, 22, 22, 21, 20, 19, 19]
     end
 
-    it 'should return an array of diameters with different progressions' do
+    it 'should return diameters with different progressions' do
       @test_2.sizes.must_equal [83, 81, 79, 77, 76, 74, 72, 71, 69, 68, 66, 65,
                                 63, 62, 60, 59, 58, 56, 55, 53, 52, 50, 49, 47,
                                 46, 45, 43, 42, 41, 40, 39, 38, 36, 35, 34, 33,
@@ -107,7 +120,7 @@ describe OrganCooker::RankTypeFlute do
                                 23]
     end
 
-    it 'should return an array of diameters with different progressions & sizes' do
+    it 'should return diameters with different progressions & sizes' do
       @test_3.sizes.must_equal [83, 81, 79, 77, 76, 74, 72, 71, 69, 68, 66, 65,
                                 63, 62, 60, 59, 58, 56, 55, 54, 53, 51, 50, 49,
                                 48, 47, 46, 45, 44, 83, 80, 76, 73, 70, 67, 65,

@@ -2,6 +2,13 @@ module OrganCooker
   ##
   # This module is shared by different classes.
   module Shared
+
+    def name=(name)
+      raise 'The name must be a string.' unless name.is_a?(String)
+      raise 'The name is required.' if name.strip.empty?
+      @name = name.strip.gsub(/[[:alpha:]]+/, &:capitalize)
+    end
+
     private
 
     ##

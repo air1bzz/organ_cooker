@@ -1,10 +1,12 @@
-require_relative 'shared'
+require 'organ_cooker/shared'
 
 ##
 # Represents a +windchest+ for a pipe organ. Not to be confused with the keyboard.
 # A windchest can have more music notes than a keyboard.
 # Ex : "Grand-Orgue", "Pedal", "Positif"...
 class OrganCooker::WindChest
+
+  include OrganCooker::Shared
   ##
   # The +name+ of the windchest
   # @overload name
@@ -15,7 +17,7 @@ class OrganCooker::WindChest
   #   @api public
   #   @param value [String] the new name
   # @return [string]
-  attr_accessor :name
+  attr_reader :name
 
   ##
   # Gets the current +number of notes+
@@ -62,7 +64,7 @@ class OrganCooker::WindChest
   # @example
   #   w = OrganCooker::WindChest.new("grand-orgue", 48, "C1".to_note, 220)
   def initialize(name, nb_notes = 61, first_note = OrganCooker::Note.new('C1'), foot_height = 200)
-    @name        = name
+    self.name    = name
     @nb_notes    = nb_notes
     @first_note  = first_note
     @foot_height = foot_height
