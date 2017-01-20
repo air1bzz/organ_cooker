@@ -80,7 +80,10 @@ module OrganCooker
     # @param foot_height [Numeric] the pipe's foot height
     # @example
     #   w = OrganCooker::WindChest.new("grand-orgue", 48, "C1".to_note, 220)
-    def initialize(name, nb_notes = 61, first_note = OrganCooker::Note.new('C1'), foot_height = 200)
+    def initialize(name,
+                   nb_notes = 61,
+                   first_note = OrganCooker::Note.new('C1'),
+                   foot_height = 200)
       self.name        = name
       self.nb_notes    = nb_notes
       self.first_note  = first_note

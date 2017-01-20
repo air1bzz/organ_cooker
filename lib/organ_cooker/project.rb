@@ -86,7 +86,7 @@ module OrganCooker
     # @example
     #   p.to_s #=> "Project: New-York"
     def to_s
-      "== Project: #{@name} =="
+      "==== Project: #{@name} ===="
     end
   end
 end

@@ -2,16 +2,7 @@ module OrganCooker
   ##
   # This module is shared by different classes.
   module Shared
-    ##
-    # The +name+ of the project
-    # @overload name
-    #   Gets the current name
-    #   @api public
-    # @overload name=(value)
-    #   Sets the new name
-    #   @api public
-    #   @param value [String] the new name
-    # @return [string]
+
     def name=(name)
       raise ArgumentError, 'The name must be a string.' unless name.is_a? String
       raise ArgumentError, 'The name is required.' if name.strip.empty?
