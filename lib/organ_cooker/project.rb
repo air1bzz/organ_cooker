@@ -1,8 +1,12 @@
+require 'organ_cooker/shared'
+
 module OrganCooker
   ##
   # Represents an organ +project+ with global parameters.
   # These parameters will be used to create organ +ranks+.
   class Project
+    include Shared
+
     ##
     # The +name+ of the project
     # @overload name
@@ -39,21 +43,15 @@ module OrganCooker
     # @return [Numeric] the diapason
     attr_reader :diapason
 
-    def name=(name)
-      raise 'The name must be a string.' unless name.is_a?(String)
-      raise 'The name is required.' if name.strip.empty?
-      @name = name.strip.gsub(/[[:alpha:]]+/, &:capitalize)
-    end
-
     def temperature=(temp)
-      raise 'The temperature must be a number.' unless temp.is_a?(Numeric)
-      raise 'The temperature must be beetween -20°C & 40°C' if temp < -20 || temp > 40
+      raise ArgumentError, 'The temperature must be a number.' unless temp.is_a? Numeric
+      raise ArgumentError, 'The temperature must be beetween -20°C & 40°C' if temp < -20 || temp > 40
       @temperature = temp
     end
 
     def diapason=(diap)
-      raise 'The diapason must be a number.' unless diap.is_a?(Numeric)
-      raise 'The diapason must be positive' if diap.zero? || diap.negative?
+      raise ArgumentError, 'The diapason must be a number.' unless diap.is_a? Numeric
+      raise ArgumentError, 'The diapason must be positive' if diap.zero? || diap.negative?
       @diapason = diap
     end
 
@@ -88,7 +86,7 @@ module OrganCooker
     # @example
     #   p.to_s #=> "Project: New-York"
     def to_s
-      "Project: #{name}"
+      "== Project: #{@name} =="
     end
   end
 end

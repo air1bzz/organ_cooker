@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'A gem for working out stuffs for organ-building.'
   spec.description   = "The gem 'organ-cooker' bundles everythin you need to
-                        work out datas for making an pipe organ."
+                        work out datas for making a pipe organ."
   spec.homepage      = 'https://github.com/air1bzz/organ-cooker'
   spec.license       = 'MIT'
 
@@ -33,13 +33,14 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 2.0'
 
-  spec.add_development_dependency 'bundler',            '~> 1.12', '>= 1.12.5'
-  spec.add_development_dependency 'rake',               '~> 11.2', '>= 11.2.2'
+  spec.add_development_dependency 'bundler',            '~> 1.13', '>= 1.13.6'
+  spec.add_development_dependency 'rake',               '~> 12.0'
   spec.add_development_dependency 'minitest',           '~> 5.9'
-  spec.add_development_dependency 'pry',                '~> 0.10.3'
+  spec.add_development_dependency 'pry',                '~> 0.10.4'
+  spec.add_development_dependency 'pry-byebug',         '~> 3.4', '>= 3.4.2'
   spec.add_development_dependency 'guard',              '~> 2.14'
   spec.add_development_dependency 'guard-minitest',     '~> 2.4',  '>= 2.4.6'
   spec.add_development_dependency 'minitest-reporters', '~> 1.1',  '>= 1.1.11'
 
-  spec.add_runtime_dependency     'roman',    '~> 0.2.0'
+  spec.add_runtime_dependency     'roman',              '~> 0.2.0'
 end
