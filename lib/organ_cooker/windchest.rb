@@ -57,7 +57,7 @@ module OrganCooker
 
     def nb_notes=(nb_notes)
       raise ArgumentError, 'Number of notes must be an integer' unless nb_notes.is_a? Fixnum
-      raise ArgumentError, 'Number of notes must be positive' if nb_notes.zero? || nb_notes.negative?
+      raise ArgumentError, 'Number of notes must be positive' if nb_notes <= 0
       @nb_notes = nb_notes
     end
 
@@ -68,7 +68,7 @@ module OrganCooker
 
     def foot_height=(height)
       raise ArgumentError, 'The diapason must be a number.' unless height.is_a? Numeric
-      raise ArgumentError, 'The height must be positive' if height.zero? || height.negative?
+      raise ArgumentError, 'The height must be positive' if height <= 0
       @foot_height = height
     end
 

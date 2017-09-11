@@ -51,7 +51,7 @@ module OrganCooker
 
     def diapason=(diap)
       raise ArgumentError, 'The diapason must be a number.' unless diap.is_a? Numeric
-      raise ArgumentError, 'The diapason must be positive' if diap.zero? || diap.negative?
+      raise ArgumentError, 'The diapason must be positive' if diap <= 0
       @diapason = diap
     end
 
